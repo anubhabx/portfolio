@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 
 import "@workspace/ui/globals.css"
 import { Providers } from "@/components/providers"
+import Taskbar from "@/components/Taskbar"
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -23,7 +24,12 @@ export default function RootLayout({
       <body
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <div className="min-h-svh bg-gradient-to-br from-slate-900 via-slate-800 to-neutral-900 text-foreground/90">
+            {children}
+          </div>
+          <Taskbar />
+        </Providers>
       </body>
     </html>
   )
