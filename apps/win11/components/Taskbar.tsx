@@ -11,7 +11,7 @@ import {
   TooltipTrigger
 } from "@workspace/ui/components/tooltip";
 import { Separator } from "@workspace/ui/components/separator";
-import { ChromeIcon, ExplorerIcon, TerminalIcon } from "./icons";
+import { ChromeIcon, ExplorerIcon, TerminalIcon } from "./Icons";
 
 import { BatteryCharging, Volume2, Wifi } from "lucide-react";
 
@@ -238,14 +238,15 @@ type TaskbarButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const TaskbarButton = React.forwardRef<HTMLButtonElement, TaskbarButtonProps>(
   ({ className, active, ...props }, ref) => (
-    <button
+    <Button
       ref={ref}
       className={cn(
+        "bg-transparent",
         "relative grid place-items-center size-9 rounded-lg",
         "text-foreground/80 hover:text-foreground",
         "outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
         "transition-colors",
-        "hover:bg-white/20 active:bg-white/25",
+        "hover:bg-foreground/10 active:bg-white/25",
         className
       )}
       {...props}
@@ -279,7 +280,10 @@ const TaskbarIcon = React.forwardRef<
           />
         </TaskbarButton>
       </TooltipTrigger>
-      <TooltipContent side="top" className="px-2 py-1 text-xs">
+      <TooltipContent
+        side="top"
+        className="px-2 py-1 text-xs bg-background/50 text-foreground -translate-y-4"
+      >
         {app.name}
       </TooltipContent>
     </Tooltip>

@@ -158,7 +158,7 @@ export const ExplorerIcon = ({ className }: { className?: string }) => {
             stroke: "none",
             fillRule: "nonzero",
             fill: "rgb(100%,89.803922%,36.862745%)",
-            fillOpacity: 1,
+            fillOpacity: 1
           }}
           d="M 126 89.25 L 0 89.25 L 0 31.5 C 0 25.699219 4.699219 21 10.5 21 L 99.75 21 L 126 42 Z M 126 89.25 "
         />
@@ -171,7 +171,7 @@ export const ExplorerIcon = ({ className }: { className?: string }) => {
             stroke: "none",
             fillRule: "nonzero",
             fill: "rgb(100%,100%,100%)",
-            fillOpacity: 0.2,
+            fillOpacity: 0.2
           }}
           d="M 99.75 21 L 10.5 21 C 4.699219 21 0 25.699219 0 31.5 L 0 34.125 C 0 28.324219 4.699219 23.625 10.5 23.625 L 99.75 23.625 L 126 44.625 L 126 42 Z M 99.75 21 "
         />
@@ -180,7 +180,7 @@ export const ExplorerIcon = ({ className }: { className?: string }) => {
             stroke: "none",
             fillRule: "nonzero",
             fill: "rgb(100%,86.666667%,33.333333%)",
-            fillOpacity: 1,
+            fillOpacity: 1
           }}
           d="M 241.5 42 L 126 42 L 99.75 63 L 10.5 63 C 4.699219 63 0 67.699219 0 73.5 L 0 210 C 0 215.800781 4.699219 220.5 10.5 220.5 L 241.5 220.5 C 247.300781 220.5 252 215.800781 252 210 L 252 52.5 C 252 46.699219 247.300781 42 241.5 42 Z M 241.5 42 "
         />
@@ -189,7 +189,7 @@ export const ExplorerIcon = ({ className }: { className?: string }) => {
             stroke: "none",
             fillRule: "nonzero",
             fill: "rgb(0%,0%,0%)",
-            fillOpacity: 0.101961,
+            fillOpacity: 0.101961
           }}
           d="M 241.5 217.875 L 10.5 217.875 C 4.699219 217.875 0 213.171875 0 207.375 L 0 210 C 0 215.796875 4.699219 220.5 10.5 220.5 L 241.5 220.5 C 247.300781 220.5 252 215.796875 252 210 L 252 207.375 C 252 213.171875 247.300781 217.875 241.5 217.875 Z M 241.5 217.875 "
         />
@@ -198,7 +198,7 @@ export const ExplorerIcon = ({ className }: { className?: string }) => {
             stroke: "none",
             fillRule: "nonzero",
             fill: "rgb(8.235294%,74.509804%,94.117647%)",
-            fillOpacity: 1,
+            fillOpacity: 1
           }}
           d="M 199.5 126 L 52.5 126 C 46.699219 126 42 130.699219 42 136.5 L 42 225.75 C 42 228.648438 44.351562 231 47.25 231 L 78.75 231 C 81.648438 231 84 228.648438 84 225.75 L 84 168 L 168 168 L 168 225.75 C 168 228.648438 170.351562 231 173.25 231 L 204.75 231 C 207.648438 231 210 228.648438 210 225.75 L 210 136.5 C 210 130.699219 205.300781 126 199.5 126 Z M 199.5 126 "
         />
@@ -207,7 +207,7 @@ export const ExplorerIcon = ({ className }: { className?: string }) => {
             stroke: "none",
             fillRule: "nonzero",
             fill: "rgb(100%,100%,100%)",
-            fillOpacity: 0.2,
+            fillOpacity: 0.2
           }}
           d="M 241.5 42 L 126 42 L 99.75 63 L 10.5 63 C 4.699219 63 0 67.699219 0 73.5 L 0 76.125 C 0 70.324219 4.699219 65.625 10.5 65.625 L 99.75 65.625 L 126 44.625 L 241.5 44.625 C 247.300781 44.625 252 49.324219 252 55.125 L 252 52.5 C 252 46.699219 247.300781 42 241.5 42 Z M 241.5 42 "
         />
@@ -216,7 +216,7 @@ export const ExplorerIcon = ({ className }: { className?: string }) => {
             stroke: "none",
             fillRule: "nonzero",
             fill: "rgb(100%,100%,100%)",
-            fillOpacity: 0.2,
+            fillOpacity: 0.2
           }}
           d="M 199.5 126 L 52.5 126 C 46.699219 126 42 130.699219 42 136.5 L 42 139.125 C 42 133.324219 46.699219 128.625 52.5 128.625 L 199.5 128.625 C 205.300781 128.625 210 133.324219 210 139.125 L 210 136.5 C 210 130.699219 205.300781 126 199.5 126 Z M 199.5 126 "
         />
@@ -225,7 +225,7 @@ export const ExplorerIcon = ({ className }: { className?: string }) => {
             stroke: "none",
             fillRule: "nonzero",
             fill: "rgb(0%,0%,0%)",
-            fillOpacity: 0.101961,
+            fillOpacity: 0.101961
           }}
           d="M 204.75 228.375 L 173.25 228.375 C 170.351562 228.375 168 226.023438 168 223.125 L 168 225.75 C 168 228.648438 170.351562 231 173.25 231 L 204.75 231 C 207.648438 231 210 228.648438 210 225.75 L 210 223.125 C 210 226.023438 207.648438 228.375 204.75 228.375 Z M 204.75 228.375 "
         />
@@ -234,7 +234,7 @@ export const ExplorerIcon = ({ className }: { className?: string }) => {
             stroke: "none",
             fillRule: "nonzero",
             fill: "rgb(0%,0%,0%)",
-            fillOpacity: 0.101961,
+            fillOpacity: 0.101961
           }}
           d="M 78.75 228.375 L 47.25 228.375 C 44.351562 228.375 42 226.023438 42 223.125 L 42 225.75 C 42 228.648438 44.351562 231 47.25 231 L 78.75 231 C 81.648438 231 84 228.648438 84 225.75 L 84 223.125 C 84 226.023438 81.648438 228.375 78.75 228.375 Z M 78.75 228.375 "
         />
@@ -243,7 +243,7 @@ export const ExplorerIcon = ({ className }: { className?: string }) => {
             stroke: "none",
             fillRule: "nonzero",
             fill: "rgb(0%,0%,0%)",
-            fillOpacity: 0.101961,
+            fillOpacity: 0.101961
           }}
           d="M 84 165.375 L 168 165.375 L 168 168 L 84 168 Z M 84 165.375 "
         />
@@ -252,7 +252,7 @@ export const ExplorerIcon = ({ className }: { className?: string }) => {
             stroke: "none",
             fillRule: "nonzero",
             fill: "rgb(100%,100%,100%)",
-            fillOpacity: 1,
+            fillOpacity: 1
           }}
           d="M 21 36.75 L 94.5 36.75 L 94.5 47.25 L 21 47.25 Z M 21 36.75 "
         />
@@ -261,7 +261,7 @@ export const ExplorerIcon = ({ className }: { className?: string }) => {
             stroke: "none",
             fillRule: "nonzero",
             fill: "rgb(50.980392%,76.470588%,25.490196%)",
-            fillOpacity: 1,
+            fillOpacity: 1
           }}
           d="M 21 36.75 L 36.75 36.75 L 36.75 47.25 L 21 47.25 Z M 21 36.75 "
         />
@@ -608,6 +608,194 @@ export const TerminalIcon = ({ className }: { className?: string }) => {
           <stop offset="1" stopColor="#E6E6E6" id="stop131" />
         </linearGradient>
       </defs>
+    </svg>
+  );
+};
+
+export const FolderIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 48 48"
+      width="48px"
+      height="48px"
+      className={className}
+    >
+      <linearGradient
+        id="Om5yvFr6YrdlC0q2Vet0Ha"
+        x1="-7.018"
+        x2="39.387"
+        y1="9.308"
+        y2="33.533"
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop offset="0" stopColor="#fac017" />
+        <stop offset=".909" stopColor="#e1ab2d" />
+      </linearGradient>
+      <path
+        fill="url(#Om5yvFr6YrdlC0q2Vet0Ha)"
+        d="M44.5,41h-41C2.119,41,1,39.881,1,38.5v-31C1,6.119,2.119,5,3.5,5h11.597	c1.519,0,2.955,0.69,3.904,1.877L21.5,10h23c1.381,0,2.5,1.119,2.5,2.5v26C47,39.881,45.881,41,44.5,41z"
+      />
+      <linearGradient
+        id="Om5yvFr6YrdlC0q2Vet0Hb"
+        x1="5.851"
+        x2="18.601"
+        y1="9.254"
+        y2="27.39"
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop offset="0" stopColor="#fbfef3" />
+        <stop offset=".909" stopColor="#e2e4e3" />
+      </linearGradient>
+      <path
+        fill="url(#Om5yvFr6YrdlC0q2Vet0Hb)"
+        d="M2,25h20V11H4c-1.105,0-2,0.895-2,2V25z"
+      />
+      <linearGradient
+        id="Om5yvFr6YrdlC0q2Vet0Hc"
+        x1="2"
+        x2="22"
+        y1="19"
+        y2="19"
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop offset="0" stopColor="#fbfef3" />
+        <stop offset=".909" stopColor="#e2e4e3" />
+      </linearGradient>
+      <path
+        fill="url(#Om5yvFr6YrdlC0q2Vet0Hc)"
+        d="M2,26h20V12H4c-1.105,0-2,0.895-2,2V26z"
+      />
+      <linearGradient
+        id="Om5yvFr6YrdlC0q2Vet0Hd"
+        x1="16.865"
+        x2="44.965"
+        y1="39.287"
+        y2="39.792"
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop offset="0" stopColor="#e3a917" />
+        <stop offset=".464" stopColor="#d79c1e" />
+      </linearGradient>
+      <path
+        fill="url(#Om5yvFr6YrdlC0q2Vet0Hd)"
+        d="M1,37.875V38.5C1,39.881,2.119,41,3.5,41h41c1.381,0,2.5-1.119,2.5-2.5v-0.625H1z"
+      />
+      <linearGradient
+        id="Om5yvFr6YrdlC0q2Vet0He"
+        x1="-4.879"
+        x2="35.968"
+        y1="12.764"
+        y2="30.778"
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop offset=".34" stopColor="#ffefb2" />
+        <stop offset=".485" stopColor="#ffedad" />
+        <stop offset=".652" stopColor="#ffe99f" />
+        <stop offset=".828" stopColor="#fee289" />
+        <stop offset="1" stopColor="#fed86b" />
+      </linearGradient>
+      <path
+        fill="url(#Om5yvFr6YrdlC0q2Vet0He)"
+        d="M44.5,11h-23l-1.237,0.824C19.114,12.591,17.763,13,16.381,13H3.5C2.119,13,1,14.119,1,15.5	v22C1,38.881,2.119,40,3.5,40h41c1.381,0,2.5-1.119,2.5-2.5v-24C47,12.119,45.881,11,44.5,11z"
+      />
+      <radialGradient
+        id="Om5yvFr6YrdlC0q2Vet0Hf"
+        cx="37.836"
+        cy="49.317"
+        r="53.875"
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop offset=".199" stopColor="#fec832" />
+        <stop offset=".601" stopColor="#fcd667" />
+        <stop offset=".68" stopColor="#fdda75" />
+        <stop offset=".886" stopColor="#fee496" />
+        <stop offset="1" stopColor="#ffe8a2" />
+      </radialGradient>
+      <path
+        fill="url(#Om5yvFr6YrdlC0q2Vet0Hf)"
+        d="M44.5,40h-41C2.119,40,1,38.881,1,37.5v-21C1,15.119,2.119,14,3.5,14h13.256	c1.382,0,2.733-0.409,3.883-1.176L21.875,12H44.5c1.381,0,2.5,1.119,2.5,2.5v23C47,38.881,45.881,40,44.5,40z"
+      />
+    </svg>
+  );
+};
+
+export const ProgramFolderIcon = ({ className }: { className?: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
+      width="48px"
+      height="48px"
+      viewBox="0 0 48 48"
+      version="1.1"
+      className={className}
+    >
+      <defs>
+        <filter
+          id="alpha"
+          filterUnits="objectBoundingBox"
+          x="0%"
+          y="0%"
+          width="100%"
+          height="100%"
+        >
+          <feColorMatrix
+            type="matrix"
+            in="SourceGraphic"
+            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"
+          />
+        </filter>
+        <image
+          id="image13"
+          width="48"
+          height="48"
+          xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAADCElEQVRoge2Ya0hTYRzGn22G3cGi9iFsCCsqEAoqUFITE8VC7UJQoh80IqxJUwqyG22TMueytaWWpNa8psaKrVJRRKUVaY2cN8wsldBUNLxO8e3TlsfjgjbUMzi/b2c75+X3vM9/L9sAFhYWluWEM/8Fad9LofpExOb18lwOAAwlHENg60nS0jJMuS+gJ5oAAK9SPZucs3W4fORJZ1CP6/SSWM+BEkCTddZzRJ63DwCEvQbIC2NQIz1HBF31AIBqST0BgDqpiBhuVxMAWCcVIzJVSKrcaibaAier7o1HDS1lAO7ci6Y4scAeeQC44TO9qvJ6YUDCoeg1yxYgNCTWxR75A6GVAAAtz+T6oZtzUOd7hrdUASgjpDXXh6kqxBvtkTfcSSQfU/UEAMhb1x+fu/Pee5R/sq5dHL+DOCrrPeo1I/EMo6zjQgnQdNWunZ8rb1TICExwV8n47kZlAwGAttK7JIqvAQCY0tIIALQ/fEo6FQ+gGbiI9owc0pWRQwCgSa4CAHxT5ZPuLBUBgP7sFJLUepkjEl6a6eNOGzNnV3y3OFNGqOzxazgsD0Ap48OoLLXK/1I4Lt/7qIxE83O4Hpuad9ceHrVuPKUBC0yU789NJgCg0OdzNowfXQ0dftMacER+Sl+y6PK6TC0GREkkeEut1ZcSYKDwlt3ymY3nl0R+/obTGmC6/C6x1vYpNHbqHTF4dziNPK2ByfwrjJc/LfKyHcAZ5IeLrtkeoXSNCJGocxp5WgNvDDfBdHlzeAMlBG2EmC6fromz3cD+lDLiDPKSYFhboDXAdPmxIpHtEVL6NMKZ5GkBJotjF1U+Nl4IR+Wni03//hAvpjwAOCrPexVjOwB5/pXx8v56CeVXJK0BpsvPlHTabmDvkcQJZ5CPGAyfWjCAX5zgi267wsxk+T07L3T4D24zW5xp/8ypW9Qup3+2uL0oecZdKWic/zYAIETmSzvOCor+ftVNq6A+FxiUsOA6Om8VbR0La+/Tj0y/5uxxVcHxCVvPsLCwsLCwsLCwsLD8F38A/B660AyuV2sAAAAASUVORK5CYII="
+        />
+        <mask id="mask0">
+          <g filter="url(#alpha)">
+            <use xlinkHref="#image13" />
+          </g>
+        </mask>
+        <image
+          id="image9"
+          width="48"
+          height="48"
+          xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAACTklEQVRoge2Y23KEIBBER8P/f/Hi5sWxmrYH0FWTVOgqCtZF6MMdzYaG/remG8po/T6rt3pWK7y34kmkOT5apjSr0lNQaKsiZSwyrwB7pAzv4lSpIKqs1eIM8ykAxpzeAGqtVRsGyjiHWllHze9CMrNZGOF0ZKJmvNUbvQAYFk4jQG/ltWHTW1YPQGR+wZDM7EtUrowo0xa8E4EcBeAW95AZwCucISgzkXnOewUAm99Mr+UvZpYRwGMOaO4pABwuDPBay89mZmkNDqBgsGd6AaKeOwOArZ7X9z0274EoMEQ0uY+sRD3aTVbysOVzAARhKH/JJ7taRntg8J2W2PyyPs9WbmiLMp4grYZTz4p0dui4VAOovWHm8Y/mEcLzRK0ZwbDxXgjVEPNqulgtk9lu1WnNhdqQaLX6kV5AvQHAl9DJzCbciRUEP6tNyKO/a+peHPwwp9Z9fs5zoGXqbGsfkjqNRhuTAvhxzZBWEPj8VypZ5axtMFkofbd2x+YoJMqodj//z6zssbvEfiJvG0CUMVOhHj/VA/L4zMF7wDMVByWQt8rTQwgBPBRQCQyrTQqNq534TgA+Snt4AUhmADbuR9g5yHeXeA5shgEgMwAaxzO4Ok7fLXWVRIgdgInMfNVUQ+wu1S7yBYgDeKYZYu8ZhLCHAcKvEQZzwO+YHvj2E90DngKIQN4GqxDuujXjTx0ral/kivmBANGR4afORc3PigY7Me6wV1wJr1D4RRrTDhCZPXMdvErv4HcR11aXq66DnyiCUP8NDQ0NDQ39PX0DYr0+HhoSfI0AAAAASUVORK5CYII="
+        />
+        <clipPath id="clip1">
+          <rect x="0" y="0" width="48" height="48" />
+        </clipPath>
+        <g id="surface12" clipPath="url(#clip1)">
+          <use xlinkHref="#image9" />
+        </g>
+        <image
+          id="image31"
+          width="48"
+          height="48"
+          xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAACFUlEQVRoge2WMU4DMRBFvwlCIM5AAWmCEBWipeEYIHEAOnIF6oiGG8ANOADnoE4JzUqgAImHArKxxzP2huwmC/Jvktg7s/973moDZGVlZWVlZWX9WqaJpsVhv/ducWIBYDJbL7/a2Zp19strbLhgAcDS0+7w5tG9vvYAzwf9C0u4JWAbBBAAEIHoe9/7LPf9dX+N1ZK53xsOzqf3W5dMvB1f7Wx1NjrBxii8dgTgdfK5CTL7RHRpgVP8GPA+Y+bZvlsDHhx0BkAOUBz1ezDmYWzRLewYqRP0DZFiaFYrmdNClLXKYUy15v0y5hpA12s6NcabK6flGxKCM8P6pEiuYSG8AAR0K5+Qsp9ERwjB96U+wX2kANIJRg1FQyroJPjn6ASnHpuAH0JBR2q0JHSImZcDiIZC/leFDg8RBPgr6IgBWosO86MGgG0pOqTUBAGaQicZoho6yQk0hg6FgTzz86ATnUBkzG1Bhw9BfA/w7/E/X8tDJ42QcoJu05WjE3+IW4QOr+U+tABe06ihhtHR+GccyQhxQ25T+OaTf3lrRic5gRQG6kMuGaobHeEpFhGqik4wKcfkQuiIPiisEQMsiA7xPs5FldFh9w5qYgFqQQfyvmpoHnRiE7A2FmIOdAL+60EnfAIqvIlbhU4SIcILP8G60UHFGhWdGEJkaUCEjybRCSblekygQwTAmDtkZWVlZWX9F30B2JWqqXizuRAAAAAASUVORK5CYII="
+        />
+        <image
+          id="image44"
+          width="48"
+          height="48"
+          xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAACYUlEQVRoge2WPWsUURSG35lsMjNh9iPIxp1NJIO1ELFXbEUr2UbwAzs7C7s0g5WilTaCFrESiYUWWolooz/AQhAEIWIhCLExhE3iY3HPuIOIIMZZlfvAsjN3zp37vjPn3DmSx+PxeDwej8fj8fyjBDWsMSlpwo6RtCnpSw3r/jKBpFCjhxJImpKUANeBD1mWTUuK5Uz9NQSSIjlhif1HcuLjPM9jYBVYkzQrqWNxkerJgJ8SygluDgaDCWA5CIILGhlpAos4VoAe8Aw4JKllMeG4xbeBCLhvQreBeUmppA6wZONngMt2vA4cldQel4mgFJ9l2TTwmBGFCWuZgedmqgu0gJcWNwROjMtEJKlp4p9WxF+Ty/GmpFaapruALeCFpJ6kWWAP8M7it4CTGqVTbcRzc3MJ8KQi/ma/3582Malcap22a0tmrCNpBsiBtxUTp2xObSRAURH/ZjAYTEjqyqVEUy597tr1RRtPzUQvDMPjlfmfgV6dBmJgCnhQEXGnKIrQBHaASWANWM3zPJZ7M6Wx/cBHm7dhBV3rG4jktsjvTdzudruppN3AYRu7YabKot73A/G118C3XchMrFRMXJQ0D1y182NmoG25/76SNkc0xq20/A60iqIIgVsmbDNJkgx4BawvLCzEJrIFXLGYT8DBcYovKduI1FqGS2EYno2iaK8JfSj39FNJSbvd7gD3Go3GAbl6GKv4krJpKwt1BjhvBs5pJLSMKX870gs1fvcGci3yUE4Mcp3mhqTXkh7Jtc9DuRY6qMSxA2v/kW6w2v9L0racCY/H4/F4PB6P5z/jK+mQ5x1xU6phAAAAAElFTkSuQmCC"
+        />
+      </defs>
+      <g id="surface1">
+        <path
+          style={{
+            stroke: "none",
+            fillRule: "evenodd",
+            fill: "rgb(33.725491%,33.725491%,33.725491%)",
+            fillOpacity: 1
+          }}
+          d="M 19.578125 7.945312 C 18.761719 6.953125 17.539062 6.375 16.25 6.375 L 5.4375 6.375 C 4.195312 6.375 3.1875 7.382812 3.1875 8.625 L 3.1875 30 C 3.1875 31.242188 4.195312 32.25 5.4375 32.25 L 42.9375 32.25 C 44.179688 32.25 45.1875 31.242188 45.1875 30 L 45.1875 13.152344 C 45.1875 11.90625 44.179688 10.902344 42.9375 10.902344 L 22.011719 10.902344 Z M 19.578125 7.945312 "
+        />
+        <use xlinkHref="#surface12" mask="url(#mask0)" />
+        <use xlinkHref="#image31" />
+        <use xlinkHref="#image44" />
+      </g>
     </svg>
   );
 };
