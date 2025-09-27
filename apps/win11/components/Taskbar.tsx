@@ -11,57 +11,27 @@ import {
   TooltipTrigger
 } from "@workspace/ui/components/tooltip";
 import { Separator } from "@workspace/ui/components/separator";
-import { ChromeIcon, ExplorerIcon, TerminalIcon, WindowsIcon } from "./Icons";
-
+import { WindowsIcon } from "./Icons";
 import { BatteryCharging, Volume2, Wifi } from "lucide-react";
-
-type PinnedApp = {
-  id: string;
-  name: string;
-  icon: React.ReactNode;
-  href?: string;
-};
-
-const DummyIcon = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" {...props}>
-    <circle cx="12" cy="12" r="9" fill="currentColor" opacity="0.12" />
-    <path
-      d="M8 12h8M12 8v8"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
-const defaultPinned: PinnedApp[] = [
-  {
-    id: "explorer",
-    name: "Explorer",
-    icon: <ExplorerIcon className="size-5" />
-  },
-  { id: "chrome", name: "Chrome", icon: <ChromeIcon className="size-5" /> },
-  {
-    id: "terminal",
-    name: "Terminal",
-    icon: <TerminalIcon className="size-5" />
-  }
-];
+import { useWindowManager } from "./WindowManager";
+import { getTaskbarApps, type TaskbarApp } from "@/data/applications";
 
 export type TaskbarProps = {
   alignment?: "center" | "left";
-  pinned?: PinnedApp[];
+  pinned?: TaskbarApp[];
 };
 
 export function Taskbar({
   alignment = "center",
-  pinned = defaultPinned
+  pinned = getTaskbarApps()
 }: TaskbarProps) {
   const [activeId, setActiveId] = React.useState<string | null>(null);
   const [overflowOpen, setOverflowOpen] = React.useState(false);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const listRef = React.useRef<HTMLDivElement>(null);
   const [visibleCount, setVisibleCount] = React.useState(pinned.length);
+
+  const { openWindow } = useWindowManager();
 
   // Recompute visible items on resize
   React.useEffect(() => {
@@ -117,12 +87,18 @@ export function Taskbar({
     }
   };
 
-  const handleLaunch = (app: PinnedApp) => {
+  const handleLaunch = (app: TaskbarApp) => {
     setActiveId(app.id);
     if (app.href) {
       window.open(app.href, "_blank", "noopener,noreferrer");
+    } else if (app.id === "file-explorer") {
+      openWindow({
+        type: "file-explorer",
+        title: "File Explorer",
+        props: { initialPath: "This PC" }
+      });
     } else {
-      alert(`${app.name} opened`);
+      alert(`Opening ${app.name}...`);
     }
   };
 
@@ -248,7 +224,7 @@ TaskbarButton.displayName = "TaskbarButton";
 
 const TaskbarIcon = React.forwardRef<
   HTMLButtonElement,
-  { app: PinnedApp; active?: boolean; onLaunch: () => void }
+  { app: TaskbarApp; active?: boolean; onLaunch: () => void }
 >(({ app, active, onLaunch }, ref) => {
   return (
     <Tooltip>

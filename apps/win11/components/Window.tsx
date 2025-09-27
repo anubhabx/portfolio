@@ -133,7 +133,7 @@ export function Window({
       {/* Title Bar */}
       <div
         className={cn(
-          "flex items-center h-8 px-4 py-2",
+          "flex items-center h-8 pl-4 pr-1 py-2",
           "bg-background/50 border-b border-border/30",
           "cursor-move select-none"
         )}

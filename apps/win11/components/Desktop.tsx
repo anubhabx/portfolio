@@ -17,86 +17,17 @@ import {
   TooltipTrigger
 } from "@workspace/ui/components/tooltip";
 import {
-  ChromeIcon,
-  ExplorerIcon,
-  TerminalIcon,
-  FolderIcon,
-  ProgramFolderIcon
-} from "./Icons";
-import {
   FileText,
   Archive,
   Settings,
   Folder,
   BrushIcon,
   ClipboardPaste,
-  RefreshCcw,
   RefreshCw
 } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import { useWindowManager } from "./WindowManager";
-
-type DesktopItem = {
-  id: string;
-  name: string;
-  type: "folder" | "file" | "app" | "shortcut";
-  icon: React.ReactNode;
-  x: number; // Grid position
-  y: number; // Grid position
-  href?: string;
-};
-
-const defaultDesktopItems: DesktopItem[] = [
-  {
-    id: "this-pc",
-    name: "This PC",
-    type: "shortcut",
-    icon: <ExplorerIcon className="size-8" />,
-    x: 0,
-    y: 0
-  },
-  {
-    id: "chrome",
-    name: "Google Chrome",
-    type: "app",
-    icon: <ChromeIcon className="size-8" />,
-    x: 0,
-    y: 1,
-    href: "https://google.com"
-  },
-  {
-    id: "terminal",
-    name: "Windows Terminal",
-    type: "app",
-    icon: <TerminalIcon className="size-8" />,
-    x: 0,
-    y: 2
-  },
-  {
-    id: "documents",
-    name: "Documents",
-    type: "folder",
-    icon: <FolderIcon className="size-8" />,
-    x: 1,
-    y: 0
-  },
-  {
-    id: "projects",
-    name: "Projects",
-    type: "folder",
-    icon: <ProgramFolderIcon className="size-8" />,
-    x: 1,
-    y: 1
-  },
-  {
-    id: "readme",
-    name: "README.txt",
-    type: "file",
-    icon: <FileText className="size-8" />,
-    x: 1,
-    y: 2
-  }
-];
+import { getDesktopItems, type DesktopItem } from "@/data/applications";
 
 export type DesktopProps = {
   items?: DesktopItem[];
@@ -105,7 +36,7 @@ export type DesktopProps = {
 };
 
 export function Desktop({
-  items = defaultDesktopItems,
+  items = getDesktopItems(),
   gridSize = 80,
   padding = 16
 }: DesktopProps) {
@@ -199,8 +130,8 @@ export function Desktop({
       // Select items within selection box
       const newSelection = new Set<string>();
       items.forEach((item) => {
-        const itemX = item.x * gridSize + padding;
-        const itemY = item.y * gridSize + padding;
+        const itemX = item.desktopPosition.x * gridSize + padding;
+        const itemY = item.desktopPosition.y * gridSize + padding;
         const itemRight = itemX + gridSize;
         const itemBottom = itemY + gridSize;
 
@@ -386,8 +317,8 @@ const DesktopIcon = React.memo(
               selected && "bg-blue-500/10 ring-1 ring-blue-400/10"
             )}
             style={{
-              left: item.x * gridSize + padding,
-              top: item.y * gridSize + padding,
+              left: item.desktopPosition.x * gridSize + padding,
+              top: item.desktopPosition.y * gridSize + padding,
               width: gridSize - 8,
               height: gridSize - 8
             }}

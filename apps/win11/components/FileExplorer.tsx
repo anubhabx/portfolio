@@ -47,108 +47,11 @@ import {
 } from "lucide-react";
 import { ExplorerIcon, FolderIcon } from "./Icons";
 import Window from "./Window";
-
-type FileSystemItem = {
-  id: string;
-  name: string;
-  type: "folder" | "file" | "drive";
-  size?: number;
-  dateModified: Date;
-  icon: React.ReactNode;
-  path: string;
-  parentPath?: string;
-};
-
-const thisPC: FileSystemItem[] = [
-  {
-    id: "desktop",
-    name: "Desktop",
-    type: "folder",
-    dateModified: new Date(2024, 0, 15),
-    icon: <Monitor className="size-4" />,
-    path: "/Desktop"
-  },
-  {
-    id: "documents",
-    name: "Documents",
-    type: "folder",
-    dateModified: new Date(2024, 0, 20),
-    icon: <Folder className="size-4 text-blue-500" />,
-    path: "/Documents"
-  },
-  {
-    id: "downloads",
-    name: "Downloads",
-    type: "folder",
-    dateModified: new Date(2024, 0, 25),
-    icon: <Download className="size-4 text-green-500" />,
-    path: "/Downloads"
-  },
-  {
-    id: "music",
-    name: "Music",
-    type: "folder",
-    dateModified: new Date(2024, 0, 18),
-    icon: <Music className="size-4 text-purple-500" />,
-    path: "/Music"
-  },
-  {
-    id: "pictures",
-    name: "Pictures",
-    type: "folder",
-    dateModified: new Date(2024, 0, 22),
-    icon: <Image className="size-4 text-yellow-500" />,
-    path: "/Pictures"
-  },
-  {
-    id: "videos",
-    name: "Videos",
-    type: "folder",
-    dateModified: new Date(2024, 0, 19),
-    icon: <Video className="size-4 text-red-500" />,
-    path: "/Videos"
-  },
-  {
-    id: "c-drive",
-    name: "Windows (C:)",
-    type: "drive",
-    size: 512000000000, // 512GB
-    dateModified: new Date(2024, 0, 10),
-    icon: <HardDrive className="size-4" />,
-    path: "/C:"
-  },
-  {
-    id: "d-drive",
-    name: "Data (D:)",
-    type: "drive",
-    size: 1000000000000, // 1TB
-    dateModified: new Date(2024, 0, 10),
-    icon: <HardDrive className="size-4" />,
-    path: "/D:"
-  }
-];
-
-const sampleFiles: FileSystemItem[] = [
-  {
-    id: "readme",
-    name: "README.txt",
-    type: "file",
-    size: 1024,
-    dateModified: new Date(2024, 0, 15),
-    icon: <FileText className="size-4" />,
-    path: "/Desktop/README.txt",
-    parentPath: "/Desktop"
-  },
-  {
-    id: "project",
-    name: "Project Files",
-    type: "folder",
-    dateModified: new Date(2024, 0, 20),
-    icon: <FolderIcon className="size-4" />,
-    path: "/Desktop/Project Files",
-    parentPath: "/Desktop"
-  }
-];
+import {
+  getThisPCItems,
+  getDesktopFolderItems,
+  type FileSystemItem
+} from "@/data/applications";
 
 export type FileExplorerProps = {
   isOpen: boolean;
@@ -174,9 +77,15 @@ export function FileExplorer({
 
   const getCurrentItems = (): FileSystemItem[] => {
     if (currentPath === "This PC") {
-      return thisPC;
+      return getThisPCItems().map((item) => ({
+        ...item,
+        dateModified: item.dateModified ?? new Date()
+      }));
     } else if (currentPath === "/Desktop") {
-      return sampleFiles.filter((item) => item.parentPath === "/Desktop");
+      return getDesktopFolderItems().map((item) => ({
+        ...item,
+        dateModified: item.dateModified ?? new Date()
+      }));
     }
     return [];
   };
@@ -203,17 +112,17 @@ export function FileExplorer({
         setCurrentPath(newPath);
         setSelectedItems(new Set());
       }
-  const navigateForward = () => {
-    if (historyIndex < navigationHistory.length - 1) {
-      const newIndex = historyIndex + 1;
-      const newPath = navigationHistory[newIndex];
-      if (newPath) {
-        setHistoryIndex(newIndex);
-        setCurrentPath(newPath);
-        setSelectedItems(new Set());
-      }
-    }
-  };
+      const navigateForward = () => {
+        if (historyIndex < navigationHistory.length - 1) {
+          const newIndex = historyIndex + 1;
+          const newPath = navigationHistory[newIndex];
+          if (newPath) {
+            setHistoryIndex(newIndex);
+            setCurrentPath(newPath);
+            setSelectedItems(new Set());
+          }
+        }
+      };
       setSelectedItems(new Set());
     }
   };
@@ -227,7 +136,7 @@ export function FileExplorer({
   const handleItemClick = (item: FileSystemItem, isDoubleClick = false) => {
     if (isDoubleClick) {
       if (item.type === "folder" || item.type === "drive") {
-        navigateTo(item.path);
+        navigateTo(item.path || "/");
       }
     } else {
       setSelectedItems(new Set([item.id]));
@@ -278,7 +187,7 @@ export function FileExplorer({
     >
       <div className="flex flex-col h-full">
         {/* Toolbar */}
-        <div className="flex items-center gap-2 p-2 border-b border-border/30 bg-background/30">
+        <div className="flex items-center gap-2 p-2 bg-background/30 border-b border-t border-white/10">
           <div className="flex items-center gap-1">
             <Button
               size="sm"
@@ -313,16 +222,16 @@ export function FileExplorer({
 
           {/* Address Bar */}
           <div className="flex-1 flex items-center gap-2">
-            <div className="flex items-center gap-1 px-2 py-1 bg-background/50 rounded border border-border/50 flex-1">
+            <div className="flex items-center gap-1 px-2 py-2 bg-background/50 rounded border border-border/50 flex-1">
               <Home className="size-4 text-muted-foreground" />
-              <span className="text-sm">{currentPath}</span>
+              <span className="text-xs">{currentPath}</span>
             </div>
 
-            <div className="flex items-center gap-1 px-2 py-1 bg-background/50 rounded border border-border/50 w-64">
+            <div className="flex items-center gap-1 px-2 py-2 bg-background/50 rounded border border-border/50 w-64">
               <Search className="size-4 text-muted-foreground" />
               <Input
                 placeholder="Search This PC"
-                className="border-none bg-transparent px-0 py-0 h-auto focus-visible:ring-0"
+                className="border-none bg-transparent! px-0 py-0 h-auto focus-visible:ring-0 text-xs placeholder:text-muted-foreground placeholder:text-xs"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -353,17 +262,8 @@ export function FileExplorer({
         {/* Content Area */}
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar */}
-          <div className="w-48 border-r border-border/30 bg-background/20 p-2">
+          <div className="w-48 border-r border-white/10">
             <div className="space-y-1">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start h-8 px-2"
-                onClick={() => navigateTo("This PC")}
-              >
-                <Monitor className="size-4 mr-2" />
-                This PC
-              </Button>
               <Button
                 variant="ghost"
                 size="sm"
@@ -443,7 +343,7 @@ export function FileExplorer({
             ) : (
               <div className="space-y-1">
                 {/* List Header */}
-                <div className="flex items-center px-3 py-2 text-sm font-medium text-muted-foreground border-b border-border/30">
+                <div className="flex items-center px-3 py-2 text-sm font-medium text-muted-foreground border-b border-white/10">
                   <div className="flex-1">Name</div>
                   <div className="w-24 text-right">Date modified</div>
                   <div className="w-20 text-right">Type</div>
@@ -496,7 +396,7 @@ export function FileExplorer({
         </div>
 
         {/* Status Bar */}
-        <div className="flex items-center justify-between px-4 py-1 text-xs text-muted-foreground border-t border-border/30 bg-background/20">
+        <div className="flex items-center justify-between px-4 py-1 text-xs text-muted-foreground border-t border-white/10 bg-background/20">
           <span>{filteredItems.length} items</span>
           {selectedItems.size > 0 && (
             <span>{selectedItems.size} item(s) selected</span>
