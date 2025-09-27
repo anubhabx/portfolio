@@ -14,7 +14,7 @@ import { Separator } from "@workspace/ui/components/separator";
 import { WindowsIcon } from "./Icons";
 import { BatteryCharging, Volume2, Wifi } from "lucide-react";
 import { useWindowManager } from "./WindowManager";
-import { getTaskbarApps, type TaskbarApp } from "@/data/applications";
+import { getTaskbarApps, type TaskbarApp } from "../data/applications";
 
 export type TaskbarProps = {
   alignment?: "center" | "left";
@@ -26,69 +26,11 @@ export function Taskbar({
   pinned = getTaskbarApps()
 }: TaskbarProps) {
   const [activeId, setActiveId] = React.useState<string | null>(null);
-  const [overflowOpen, setOverflowOpen] = React.useState(false);
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const listRef = React.useRef<HTMLDivElement>(null);
-  const [visibleCount, setVisibleCount] = React.useState(pinned.length);
-
   const { openWindow } = useWindowManager();
-
-  // Recompute visible items on resize
-  React.useEffect(() => {
-    const compute = () => {
-      const container = listRef.current;
-      if (!container) return;
-      const maxWidth = container.clientWidth;
-      const itemWidth = 44; // button size including gap
-      // Remove the overflow button space subtraction since overflow button isn't in the main dock
-      const maxItems = Math.max(0, Math.floor(maxWidth / itemWidth));
-      setVisibleCount(Math.min(maxItems, pinned.length));
-    };
-    compute();
-    const ro = new ResizeObserver(compute);
-    if (containerRef.current) ro.observe(containerRef.current);
-    if (listRef.current) ro.observe(listRef.current);
-    window.addEventListener("resize", compute);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", compute);
-    };
-  }, [pinned.length]);
-
-  // Keyboard navigation within pinned icons
-  const buttonsRef = React.useRef<Array<HTMLButtonElement | null>>([]);
-  const focusIndex = (index: number) => buttonsRef.current[index]?.focus();
-
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    const currentIndex = buttonsRef.current.findIndex(
-      (el) => el === document.activeElement
-    );
-    if (e.key === "ArrowRight") {
-      e.preventDefault();
-      const next = (currentIndex + 1) % Math.min(visibleCount, pinned.length);
-      focusIndex(next);
-    } else if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      const prev =
-        (currentIndex - 1 + Math.min(visibleCount, pinned.length)) %
-        Math.min(visibleCount, pinned.length);
-      focusIndex(prev);
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      const target = pinned[currentIndex];
-      if (target) handleLaunch(target);
-    } else if (e.key === "Escape") {
-      setOverflowOpen(false);
-      (
-        containerRef.current?.querySelector<HTMLButtonElement>(
-          "button[data-start]"
-        ) as HTMLButtonElement | null
-      )?.focus();
-    }
-  };
 
   const handleLaunch = (app: TaskbarApp) => {
     setActiveId(app.id);
+
     if (app.href) {
       window.open(app.href, "_blank", "noopener,noreferrer");
     } else if (app.id === "file-explorer") {
@@ -98,56 +40,46 @@ export function Taskbar({
         props: { initialPath: "This PC" }
       });
     } else {
+      // For other apps, just show an alert for now
       alert(`Opening ${app.name}...`);
     }
-  };
 
-  const visible = pinned.slice(0, visibleCount);
-  const overflow = pinned.slice(visibleCount);
+    // Reset active state after a brief moment
+    setTimeout(() => setActiveId(null), 1000);
+  };
 
   return (
     <TooltipProvider delayDuration={200}>
       <div
-        ref={containerRef}
-        className={cn("fixed bottom-0 z-50", "w-full")}
+        className={cn("fixed bottom-0 z-50 w-full")}
         aria-label="Taskbar"
         role="navigation"
       >
         <div
           className={cn(
-            "flex items-center gap-2 p-2",
-            "border border-white/10",
+            "flex items-center justify-between gap-2 p-2",
+            "border-t border-white/10",
             "bg-white/10 dark:bg-black/20",
-            "backdrop-blur-xl shadow-lg shadow-black/10"
+            "backdrop-blur-xl shadow-lg"
           )}
         >
-          {/* Dock */}
-          <div
-            ref={listRef}
-            className={cn(
-              "flex items-center gap-1.5 px-1",
-              alignment === "center" ? "mx-auto" : "",
-              "absolute left-1/2 -translate-x-1/2"
-            )}
-            onKeyDown={onKeyDown}
-            role="toolbar"
-            aria-label="Dock"
-          >
+          {/* Left section - empty for now */}
+          <div />
+
+          {/* Center - Dock */}
+          <div className="flex items-center gap-1.5 px-2">
             {/* Start button */}
             <TaskbarButton
+              onClick={() => alert("Start menu coming soon...")}
               aria-label="Start"
-              data-start
-              onClick={() => alert("Start menu coming soon")}
             >
               <WindowsIcon className="size-5" />
             </TaskbarButton>
 
-            {visible.map((app, i) => (
+            {/* App icons */}
+            {pinned.map((app) => (
               <TaskbarIcon
                 key={app.id}
-                ref={(el) => {
-                  buttonsRef.current[i] = el;
-                }}
                 app={app}
                 active={activeId === app.id}
                 onLaunch={() => handleLaunch(app)}
@@ -155,15 +87,11 @@ export function Taskbar({
             ))}
           </div>
 
-          <div className="ml-auto flex items-center gap-2 pr-2">
-            {/* System tray placeholder */}
+          {/* Right section - System tray */}
+          <div className="flex items-center gap-2">
             <Separator orientation="vertical" className="h-6 bg-white/20" />
-
-            <div className="flex items-center gap-2 pl-1 pr-1.5 text-xs tabular-nums text-foreground/80">
-              <div
-                aria-hidden
-                className="flex items-center gap-2 opacity-75 px-2 p-2 hover:bg-foreground/10 rounded-md transition-colors"
-              >
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 opacity-75 px-2 py-1 hover:bg-foreground/10 rounded-md transition-colors">
                 <Wifi className="size-4" />
                 <Volume2 className="size-4" />
                 <BatteryCharging className="size-4" />
@@ -172,28 +100,6 @@ export function Taskbar({
             </div>
           </div>
         </div>
-
-        {/* Overflow menu */}
-        {overflow.length > 0 && overflowOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 6 }}
-            className="absolute bottom-14 left-1/2 -translate-x-1/2 rounded-xl border border-white/10 bg-white/10 dark:bg-black/30 backdrop-blur-xl shadow-xl p-2 grid grid-cols-6 gap-1"
-            role="menu"
-            aria-label="Overflow apps"
-          >
-            {overflow.map((app) => (
-              <TaskbarButton
-                key={app.id}
-                onClick={() => handleLaunch(app)}
-                aria-label={app.name}
-              >
-                {app.icon}
-              </TaskbarButton>
-            ))}
-          </motion.div>
-        )}
       </div>
     </TooltipProvider>
   );
@@ -207,13 +113,13 @@ const TaskbarButton = React.forwardRef<HTMLButtonElement, TaskbarButtonProps>(
   ({ className, active, ...props }, ref) => (
     <Button
       ref={ref}
+      variant="ghost"
+      size="sm"
       className={cn(
-        "bg-transparent",
-        "relative grid place-items-center size-9 rounded-lg",
+        "relative size-10 p-0 rounded-lg",
         "text-foreground/80 hover:text-foreground",
-        "outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
-        "transition-colors",
         "hover:bg-foreground/10 active:bg-white/25",
+        "transition-colors",
         className
       )}
       {...props}
@@ -231,26 +137,22 @@ const TaskbarIcon = React.forwardRef<
       <TooltipTrigger asChild>
         <TaskbarButton
           ref={ref}
-          aria-label={app.name}
           onClick={onLaunch}
           active={active}
+          aria-label={app.name}
         >
-          <span className="sr-only">{app.name}</span>
-          <span className="text-base">{app.icon}</span>
+          {app.icon}
           <motion.span
             layoutId={`indicator-${app.id}`}
             className={cn(
-              "pointer-events-none absolute -bottom-1 left-1/2 h-0.5 w-3 -translate-x-1/2 rounded-full bg-cyan-400/90",
+              "absolute -bottom-1 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-cyan-400/90",
               active ? "opacity-100" : "opacity-0"
             )}
             aria-hidden
           />
         </TaskbarButton>
       </TooltipTrigger>
-      <TooltipContent
-        side="top"
-        className="px-2 py-1 text-xs bg-background/50 text-foreground -translate-y-4"
-      >
+      <TooltipContent side="top" className="text-xs">
         {app.name}
       </TooltipContent>
     </Tooltip>
@@ -260,12 +162,13 @@ TaskbarIcon.displayName = "TaskbarIcon";
 
 function Clock() {
   const [now, setNow] = React.useState(() => new Date());
+
   React.useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 1000 * 30);
-    return () => clearInterval(id);
+    const interval = setInterval(() => setNow(new Date()), 30000);
+    return () => clearInterval(interval);
   }, []);
+
   const time = now.toLocaleTimeString([], {
-    formatMatcher: "best fit",
     hour: "2-digit",
     minute: "2-digit",
     hour12: false
@@ -278,12 +181,9 @@ function Clock() {
   });
 
   return (
-    <div
-      aria-label="Clock"
-      className="leading-none text-right flex flex-col gap-0.5"
-    >
-      <div className="text-xs">{time}</div>
-      <div className="text-foreground/60 text-xs">{date}</div>
+    <div className="text-right text-xs leading-tight">
+      <div>{time}</div>
+      <div className="text-foreground/60">{date}</div>
     </div>
   );
 }
