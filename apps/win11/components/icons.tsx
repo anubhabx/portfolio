@@ -799,3 +799,12 @@ export const ProgramFolderIcon = ({ className }: { className?: string }) => {
     </svg>
   );
 };
+
+export const WindowsIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false" {...props}>
+    <path
+      fill="currentColor"
+      d="M4 7.5l18-2.5v20H4V7.5zm20 17.5V5l20-3v23H24zM4 24h18v19.5L4 41V24zm20 0h20v23l-20-3V24z"
+    />
+  </svg>
+);

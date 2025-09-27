@@ -34,6 +34,7 @@ import {
   RefreshCw
 } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
+import { useWindowManager } from "./WindowManager";
 
 type DesktopItem = {
   id: string;
@@ -122,6 +123,7 @@ export function Desktop({
     height: number;
   } | null>(null);
   const desktopRef = React.useRef<HTMLDivElement>(null);
+  const { openWindow } = useWindowManager();
 
   // Handle desktop click to clear selection
   const handleDesktopClick = (e: React.MouseEvent) => {
@@ -153,6 +155,12 @@ export function Desktop({
   const handleItemDoubleClick = (item: DesktopItem) => {
     if (item.href) {
       window.open(item.href, "_blank", "noopener,noreferrer");
+    } else if (item.id === "this-pc") {
+      openWindow({
+        type: "file-explorer",
+        title: "This PC",
+        props: { initialPath: "This PC" }
+      });
     } else {
       alert(`Opening ${item.name}...`);
     }
