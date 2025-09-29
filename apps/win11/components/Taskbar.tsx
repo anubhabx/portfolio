@@ -15,6 +15,7 @@ import { WindowsIcon } from "./Icons";
 import { BatteryCharging, Volume2, Wifi } from "lucide-react";
 import { useWindowManager } from "./WindowManager";
 import { getTaskbarApps, type TaskbarApp } from "../data/applications";
+import StartMenu from "./StartMenu";
 
 export type TaskbarProps = {
   alignment?: "center" | "left";
@@ -26,6 +27,7 @@ export function Taskbar({
   pinned = getTaskbarApps()
 }: TaskbarProps) {
   const [activeId, setActiveId] = React.useState<string | null>(null);
+  const [isStartMenuOpen, setIsStartMenuOpen] = React.useState(false);
   const { openWindow } = useWindowManager();
 
   const handleLaunch = (app: TaskbarApp) => {
@@ -40,12 +42,14 @@ export function Taskbar({
         props: { initialPath: "This PC" }
       });
     } else {
-      // For other apps, just show an alert for now
       alert(`Opening ${app.name}...`);
     }
 
-    // Reset active state after a brief moment
     setTimeout(() => setActiveId(null), 1000);
+  };
+
+  const handleStartClick = () => {
+    setIsStartMenuOpen(!isStartMenuOpen);
   };
 
   return (
@@ -57,26 +61,24 @@ export function Taskbar({
       >
         <div
           className={cn(
-            "flex items-center justify-between gap-2 p-2",
+            "flex items-center justify-between gap-2 px-2 py-2",
             "border-t border-white/10",
             "bg-white/10 dark:bg-black/20",
-            "backdrop-blur-xl shadow-lg"
+            "backdrop-blur-xl shadow-lg",
+            "relative"
           )}
         >
-          {/* Left section - empty for now */}
           <div />
 
-          {/* Center - Dock */}
-          <div className="flex items-center gap-1.5 px-2">
-            {/* Start button */}
+          <div className="flex items-center gap-1.5 px-2 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <TaskbarButton
-              onClick={() => alert("Start menu coming soon...")}
+              onClick={handleStartClick}
               aria-label="Start"
+              active={isStartMenuOpen}
             >
               <WindowsIcon className="size-5" />
             </TaskbarButton>
 
-            {/* App icons */}
             {pinned.map((app) => (
               <TaskbarIcon
                 key={app.id}
@@ -87,7 +89,6 @@ export function Taskbar({
             ))}
           </div>
 
-          {/* Right section - System tray */}
           <div className="flex items-center gap-2">
             <Separator orientation="vertical" className="h-6 bg-white/20" />
             <div className="flex items-center gap-2">
@@ -100,6 +101,12 @@ export function Taskbar({
             </div>
           </div>
         </div>
+
+        {/* Start Menu */}
+        <StartMenu
+          isOpen={isStartMenuOpen}
+          onClose={() => setIsStartMenuOpen(false)}
+        />
       </div>
     </TooltipProvider>
   );
@@ -120,6 +127,7 @@ const TaskbarButton = React.forwardRef<HTMLButtonElement, TaskbarButtonProps>(
         "text-foreground/80 hover:text-foreground",
         "hover:bg-foreground/10 active:bg-white/25",
         "transition-colors",
+        active && "bg-white/15",
         className
       )}
       {...props}
