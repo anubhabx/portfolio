@@ -18,13 +18,8 @@ import {
 } from "@workspace/ui/components/tooltip";
 import { Button } from "@workspace/ui/components/button";
 import { useWindowManager } from "./WindowManager";
-import { getDesktopItems, type DesktopItem } from "../data/applications";
-
-export type DesktopProps = {
-  items?: DesktopItem[];
-  gridSize?: number;
-  padding?: number;
-};
+import { getDesktopItems, getWindowTypeFromApp } from "@/data/applications";
+import type { DesktopProps, DesktopItem } from "@/types";
 
 export function Desktop({
   items = getDesktopItems(),
@@ -50,14 +45,17 @@ export function Desktop({
   const handleItemDoubleClick = (item: DesktopItem) => {
     if (item.href) {
       window.open(item.href, "_blank", "noopener,noreferrer");
-    } else if (item.id === "this-pc") {
-      openWindow({
-        type: "file-explorer",
-        title: "This PC",
-        props: { initialPath: "This PC" }
-      });
     } else {
-      alert(`Opening ${item.name}...`);
+      const windowType = getWindowTypeFromApp(item);
+      if (windowType) {
+        openWindow({
+          type: windowType as any,
+          title: item.name,
+          props: item.id === "this-pc" ? { initialPath: "This PC" } : {}
+        });
+      } else {
+        alert(`Opening ${item.name}...`);
+      }
     }
   };
 

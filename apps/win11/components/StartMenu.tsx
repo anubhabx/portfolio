@@ -6,8 +6,9 @@ import { cn } from "@workspace/ui/lib/utils";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Search, Power, User } from "lucide-react";
-import { useWindowManager } from "./WindowManager";
-import { applications, type Application } from "../data/applications";
+import { useWindowManager } from "@/components/WindowManager";
+import { applications } from "@/data/applications";
+import type { Application } from "@/types";
 
 export type StartMenuProps = {
   isOpen: boolean;

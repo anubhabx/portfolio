@@ -17,13 +17,10 @@ import {
   Folder,
   Download
 } from "lucide-react";
-import { ExplorerIcon } from "./Icons";
-import Window from "./Window";
-import {
-  getThisPCItems,
-  getDesktopFolderItems,
-  type FileSystemItem
-} from "../data/applications";
+import { ExplorerIcon } from "@/components/Icons";
+import Window from "@/components/Window";
+import { type FileSystemItem } from "@/types";
+import { getThisPCItems, getDesktopFolderItems } from "@/data/applications";
 
 export type FileExplorerProps = {
   isOpen: boolean;
@@ -316,9 +313,7 @@ export function FileExplorer({
         {/* Status Bar */}
         <div className="flex items-center justify-between px-4 py-2 text-sm text-muted-foreground border-t border-white/10 bg-background/20">
           <span>{filteredItems.length} items</span>
-          {selectedItems.size > 0 && (
-            <span>{selectedItems.size} selected</span>
-          )}
+          {selectedItems.size > 0 && <span>{selectedItems.size} selected</span>}
         </div>
       </div>
     </Window>

@@ -808,3 +808,98 @@ export const WindowsIcon = (props: React.SVGProps<SVGSVGElement>) => (
     />
   </svg>
 );
+
+export const WindowsUserFolderIcon = ({
+  className
+}: {
+  className?: string;
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
+      width="48px"
+      height="48px"
+      viewBox="0 0 48 48"
+      version="1.1"
+      className={className}
+    >
+      <defs>
+        <filter
+          id="alpha"
+          filterUnits="objectBoundingBox"
+          x="0%"
+          y="0%"
+          width="100%"
+          height="100%"
+        >
+          <feColorMatrix
+            type="matrix"
+            in="SourceGraphic"
+            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"
+          />
+        </filter>
+        <image
+          id="image13"
+          width="48"
+          height="48"
+          xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAADCElEQVRoge2Ya0hTYRzGn22G3cGi9iFsCCsqEAoqUFITE8VC7UJQoh80IqxJUwqyG22TMueytaWWpNa8psaKrVJRRKUVaY2cN8wsldBUNLxO8e3TlsfjgjbUMzi/b2c75+X3vM9/L9sAFhYWluWEM/8Fad9LofpExOb18lwOAAwlHENg60nS0jJMuS+gJ5oAAK9SPZucs3W4fORJZ1CP6/SSWM+BEkCTddZzRJ63DwCEvQbIC2NQIz1HBF31AIBqST0BgDqpiBhuVxMAWCcVIzJVSKrcaibaAier7o1HDS1lAO7ci6Y4scAeeQC44TO9qvJ6YUDCoeg1yxYgNCTWxR75A6GVAAAtz+T6oZtzUOd7hrdUASgjpDXXh6kqxBvtkTfcSSQfU/UEAMhb1x+fu/Pee5R/sq5dHL+DOCrrPeo1I/EMo6zjQgnQdNWunZ8rb1TICExwV8n47kZlAwGAttK7JIqvAQCY0tIIALQ/fEo6FQ+gGbiI9owc0pWRQwCgSa4CAHxT5ZPuLBUBgP7sFJLUepkjEl6a6eNOGzNnV3y3OFNGqOzxazgsD0Ap48OoLLXK/1I4Lt/7qIxE83O4Hpuad9ceHrVuPKUBC0yU789NJgCg0OdzNowfXQ0dftMacER+Sl+y6PK6TC0GREkkeEut1ZcSYKDwlt3ymY3nl0R+/obTGmC6/C6x1vYpNHbqHTF4dziNPK2ByfwrjJc/LfKyHcAZ5IeLrtkeoXSNCJGocxp5WgNvDDfBdHlzeAMlBG2EmC6fromz3cD+lDLiDPKSYFhboDXAdPmxIpHtEVL6NMKZ5GkBJotjF1U+Nl4IR+Wni03//hAvpjwAOCrPexVjOwB5/pXx8v56CeVXJK0BpsvPlHTabmDvkcQJZ5CPGAyfWjCAX5zgi267wsxk+T07L3T4D24zW5xp/8ypW9Qup3+2uL0oecZdKWic/zYAIETmSzvOCor+ftVNq6A+FxiUsOA6Om8VbR0La+/Tj0y/5uxxVcHxCVvPsLCwsLCwsLCwsLD8F38A/B660AyuV2sAAAAASUVORK5CYII="
+        />
+        <mask id="mask0">
+          <g filter="url(#alpha)">
+            <use xlinkHref="#image13" />
+          </g>
+        </mask>
+        <image
+          id="image9"
+          width="48"
+          height="48"
+          xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAACTklEQVRoge2Y23KEIBBER8P/f/Hi5sWxmrYH0FWTVOgqCtZF6MMdzYaG/remG8po/T6rt3pWK7y34kmkOT5apjSr0lNQaKsiZSwyrwB7pAzv4lSpIKqs1eIM8ykAxpzeAGqtVRsGyjiHWllHze9CMrNZGOF0ZKJmvNUbvQAYFk4jQG/ltWHTW1YPQGR+wZDM7EtUrowo0xa8E4EcBeAW95AZwCucISgzkXnOewUAm99Mr+UvZpYRwGMOaO4pABwuDPBay89mZmkNDqBgsGd6AaKeOwOArZ7X9z0274EoMEQ0uY+sRD3aTVbysOVzAARhKH/JJ7taRntg8J2W2PyyPs9WbmiLMp4grYZTz4p0dui4VAOovWHm8Y/mEcLzRK0ZwbDxXgjVEPNqulgtk9lu1WnNhdqQaLX6kV5AvQHAl9DJzCbciRUEP6tNyKO/a+peHPwwp9Z9fs5zoGXqbGsfkjqNRhuTAvhxzZBWEPj8VypZ5axtMFkofbd2x+YoJMqodj//z6zssbvEfiJvG0CUMVOhHj/VA/L4zMF7wDMVByWQt8rTQwgBPBRQCQyrTQqNq534TgA+Snt4AUhmADbuR9g5yHeXeA5shgEgMwAaxzO4Ok7fLXWVRIgdgInMfNVUQ+wu1S7yBYgDeKYZYu8ZhLCHAcKvEQZzwO+YHvj2E90DngKIQN4GqxDuujXjTx0ral/kivmBANGR4afORc3PigY7Me6wV1wJr1D4RRrTDhCZPXMdvErv4HcR11aXq66DnyiCUP8NDQ0NDQ39PX0DYr0+HhoSfI0AAAAASUVORK5CYII="
+        />
+        <clipPath id="clip1">
+          <rect x="0" y="0" width="48" height="48" />
+        </clipPath>
+        <g id="surface12" clipPath="url(#clip1)">
+          <use xlinkHref="#image9" />
+        </g>
+        <image
+          id="image31"
+          width="48"
+          height="48"
+          xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAACOUlEQVRoge1XsU7cQBB9s0YICb4AKdU1RNH9Ag2fAYJUKZLfSJ0uf0B6IqWk4BuABv4hVYQECedJYfuY3Z3Ztc0ZTmhfc/aOPfPezPOeDRQUFBQUFBQUjAZNkXT+8WYPi4d9AKgAYAE4Ea/q5rdbqxb+Oer2vm6tjVeg2/Oz+YWstXIBH46vTxzzd2JsEwDipghx4tiIOyUO4Mf5z/lRV29DI7H7+erd5uZO04T7Zm0rQbq+/7NV1fTegb4Q80G3HpG0jjVBAMBtIn46JsYhAF3A7qfLPUfuFz1iVj/eNV1oE/4zO8XYALVF2SOxLB6QQB9BibiE80/cVwJmSRJirW8nVRJBrihv4n4JbwKOMOvVnSUJkW0giVTcmhq6uOTsnckRZ0lwfxJB/rFTC7sfCxAXh4IkicHWYYOEJi4rwlfhCXht65BsmNK8buqmgO7GdbRO5ApNwCgSucIrtM6SnykgS0Kxjhj31NYR/8aGgGSRtHVIKeyTWK11VAFTWUclIbfsZC6O1mwBJsnprOM9c9Exqw0xBTit8EtZx4ib4jQBHiwShoiXsE52AtaDGxZe2VvlQOvkt9F6mHXSJMZPzczby0JjraPEc2+VQ63Tz0IiSaQ+ZZ2B+7vWsO4dK5fLFIA1sI4qLnCFLUBctI7WCbsfCXCWdcTa5NbJiRi2jcYkJ7eOMrVQnClg6m/ZZ1snt40S6Pfk37LPsE52G3VcfyPgb/ZGTdzIqQ2xDjHgGKcoKCgoKCh4K/gPsJsUnsiuv0wAAAAASUVORK5CYII="
+        />
+      </defs>
+      <g id="surface1">
+        <path
+          style={{
+            stroke: "none",
+            fillRule: "evenodd",
+            fill: "rgb(33.725491%,33.725491%,33.725491%)",
+            fillOpacity: 1
+          }}
+          d="M 19.578125 7.945312 C 18.761719 6.953125 17.539062 6.375 16.25 6.375 L 5.4375 6.375 C 4.195312 6.375 3.1875 7.382812 3.1875 8.625 L 3.1875 30 C 3.1875 31.242188 4.195312 32.25 5.4375 32.25 L 42.9375 32.25 C 44.179688 32.25 45.1875 31.242188 45.1875 30 L 45.1875 13.152344 C 45.1875 11.90625 44.179688 10.902344 42.9375 10.902344 L 22.011719 10.902344 Z M 19.578125 7.945312 "
+        />
+        <use xlinkHref="#surface12" mask="url(#mask0)" />
+        <use xlinkHref="#image31" />
+        <path
+          style={{
+            stroke: "none",
+            fillRule: "nonzero",
+            fill: "rgb(100%,100%,100%)",
+            fillOpacity: 0.439216
+          }}
+          d="M 28.039062 21.515625 C 28.039062 19.261719 26.214844 17.4375 23.960938 17.4375 C 21.710938 17.4375 19.882812 19.261719 19.882812 21.515625 C 19.882812 23.769531 21.710938 25.59375 23.960938 25.59375 C 26.214844 25.59375 28.039062 23.769531 28.039062 21.515625 Z M 28.039062 21.515625 "
+        />
+        <path
+          style={{
+            stroke: "none",
+            fillRule: "nonzero",
+            fill: "rgb(100%,100%,100%)",
+            fillOpacity: 0.439216
+          }}
+          d="M 17.4375 28.503906 C 17.4375 27.632812 18.140625 26.929688 19.011719 26.929688 L 28.914062 26.929688 C 29.78125 26.929688 30.488281 27.632812 30.488281 28.503906 C 30.488281 31.402344 28.136719 33.75 25.238281 33.75 L 22.683594 33.75 C 19.785156 33.75 17.4375 31.402344 17.4375 28.503906 Z M 17.4375 28.503906 "
+        />
+      </g>
+    </svg>
+  );
+};

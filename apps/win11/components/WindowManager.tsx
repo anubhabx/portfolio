@@ -1,21 +1,14 @@
 "use client";
 
 import * as React from "react";
+import { AnimatePresence } from "framer-motion";
+import type { OpenWindow, WindowManagerContextType } from "../types";
+
+// Import window components
 import FileExplorer from "./FileExplorer";
-
-export type OpenWindow = {
-  id: string;
-  type: "file-explorer" | "notepad" | "calculator";
-  title: string;
-  props?: any;
-};
-
-type WindowManagerContextType = {
-  windows: OpenWindow[];
-  openWindow: (window: Omit<OpenWindow, "id">) => void;
-  closeWindow: (id: string) => void;
-  focusWindow: (id: string) => void;
-};
+import AboutWindow from "@/components/AboutWindow";
+import ProjectsWindow from "@/components/ProjectsWindow";
+import ResumeWindow from "@/components/ResumeWindow";
 
 const WindowManagerContext =
   React.createContext<WindowManagerContextType | null>(null);
@@ -65,22 +58,47 @@ export function WindowManagerProvider({
     >
       {children}
 
-      {/* Render Windows */}
-      {windows.map((window) => {
-        switch (window.type) {
-          case "file-explorer":
-            return (
-              <FileExplorer
-                key={window.id}
-                isOpen={true}
-                onClose={() => closeWindow(window.id)}
-                {...window.props}
-              />
-            );
-          default:
-            return null;
-        }
-      })}
+      <AnimatePresence>
+        {windows.map((window) => {
+          switch (window.type) {
+            case "file-explorer":
+              return (
+                <FileExplorer
+                  key={window.id}
+                  isOpen={true}
+                  onClose={() => closeWindow(window.id)}
+                  {...window.props}
+                />
+              );
+            case "about-me":
+              return (
+                <AboutWindow
+                  key={window.id}
+                  isOpen={true}
+                  onClose={() => closeWindow(window.id)}
+                />
+              );
+            case "my-projects":
+              return (
+                <ProjectsWindow
+                  key={window.id}
+                  isOpen={true}
+                  onClose={() => closeWindow(window.id)}
+                />
+              );
+            case "resume":
+              return (
+                <ResumeWindow
+                  key={window.id}
+                  isOpen={true}
+                  onClose={() => closeWindow(window.id)}
+                />
+              );
+            default:
+              return null;
+          }
+        })}
+      </AnimatePresence>
     </WindowManagerContext.Provider>
   );
 }

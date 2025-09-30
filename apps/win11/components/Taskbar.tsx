@@ -13,14 +13,10 @@ import {
 import { Separator } from "@workspace/ui/components/separator";
 import { WindowsIcon } from "./Icons";
 import { BatteryCharging, Volume2, Wifi } from "lucide-react";
-import { useWindowManager } from "./WindowManager";
-import { getTaskbarApps, type TaskbarApp } from "../data/applications";
-import StartMenu from "./StartMenu";
-
-export type TaskbarProps = {
-  alignment?: "center" | "left";
-  pinned?: TaskbarApp[];
-};
+import { useWindowManager } from "@/components/WindowManager";
+import { getTaskbarApps, getWindowTypeFromApp } from "@/data/applications";
+import StartMenu from "@/components/StartMenu";
+import type { TaskbarProps, TaskbarApp } from "@/types";
 
 export function Taskbar({
   alignment = "center",
@@ -35,14 +31,17 @@ export function Taskbar({
 
     if (app.href) {
       window.open(app.href, "_blank", "noopener,noreferrer");
-    } else if (app.id === "file-explorer") {
-      openWindow({
-        type: "file-explorer",
-        title: "File Explorer",
-        props: { initialPath: "This PC" }
-      });
     } else {
-      alert(`Opening ${app.name}...`);
+      const windowType = getWindowTypeFromApp(app);
+      if (windowType) {
+        openWindow({
+          type: windowType as any,
+          title: app.name,
+          props: app.id === "file-explorer" ? { initialPath: "This PC" } : {}
+        });
+      } else {
+        alert(`Opening ${app.name}...`);
+      }
     }
 
     setTimeout(() => setActiveId(null), 1000);
@@ -61,16 +60,15 @@ export function Taskbar({
       >
         <div
           className={cn(
-            "flex items-center justify-between gap-2 px-2 py-2",
+            "flex items-center justify-between gap-2 p-2",
             "border-t border-white/10",
             "bg-white/10 dark:bg-black/20",
-            "backdrop-blur-xl shadow-lg",
-            "relative"
+            "backdrop-blur-xl shadow-lg"
           )}
         >
           <div />
 
-          <div className="flex items-center gap-1.5 px-2 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="flex items-center gap-1.5 px-2">
             <TaskbarButton
               onClick={handleStartClick}
               aria-label="Start"
@@ -102,7 +100,6 @@ export function Taskbar({
           </div>
         </div>
 
-        {/* Start Menu */}
         <StartMenu
           isOpen={isStartMenuOpen}
           onClose={() => setIsStartMenuOpen(false)}

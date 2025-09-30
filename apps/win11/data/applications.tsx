@@ -3,26 +3,17 @@ import {
   ExplorerIcon,
   ChromeIcon,
   TerminalIcon,
-  FolderIcon
+  FolderIcon,
+  WindowsUserFolderIcon,
+  ProgramFolderIcon
 } from "../components/Icons";
-import { FileText } from "lucide-react";
-
-export type ApplicationType = "folder" | "file" | "app" | "shortcut" | "system";
-
-export type Application = {
-  id: string;
-  name: string;
-  type: ApplicationType;
-  icon: React.ReactNode;
-  href?: string;
-  path?: string;
-  parentPath?: string;
-  size?: number;
-  dateModified: Date;
-  pinnedToTaskbar?: boolean;
-  showOnDesktop?: boolean;
-  desktopPosition?: { x: number; y: number };
-};
+import { FileText, Mail } from "lucide-react";
+import type {
+  Application,
+  DesktopItem,
+  TaskbarApp,
+  FileSystemItem
+} from "../types";
 
 export const applications: Application[] = [
   // System Applications
@@ -33,7 +24,8 @@ export const applications: Application[] = [
     icon: <ExplorerIcon className="size-5" />,
     pinnedToTaskbar: true,
     showOnDesktop: false,
-    dateModified: new Date(2024, 0, 1)
+    dateModified: new Date(2024, 0, 1),
+    windowType: "file-explorer"
   },
   {
     id: "this-pc",
@@ -42,7 +34,54 @@ export const applications: Application[] = [
     icon: <ExplorerIcon className="size-8" />,
     showOnDesktop: true,
     desktopPosition: { x: 0, y: 0 },
-    dateModified: new Date(2024, 0, 1)
+    dateModified: new Date(2024, 0, 1),
+    windowType: "file-explorer"
+  },
+
+  // Portfolio Applications
+  {
+    id: "about-me",
+    name: "About Me",
+    type: "portfolio",
+    icon: <WindowsUserFolderIcon className="size-6" />,
+    pinnedToTaskbar: true,
+    showOnDesktop: true,
+    desktopPosition: { x: 0, y: 1 },
+    dateModified: new Date(2024, 0, 1),
+    windowType: "about-me"
+  },
+  {
+    id: "my-projects",
+    name: "My Projects",
+    type: "portfolio",
+    icon: <ProgramFolderIcon className="size-6" />,
+    pinnedToTaskbar: true,
+    showOnDesktop: true,
+    desktopPosition: { x: 0, y: 2 },
+    dateModified: new Date(2024, 0, 1),
+    windowType: "my-projects"
+  },
+  {
+    id: "resume",
+    name: "Resume",
+    type: "portfolio",
+    icon: <FileText className="size-6" />,
+    pinnedToTaskbar: true,
+    showOnDesktop: true,
+    desktopPosition: { x: 0, y: 3 },
+    dateModified: new Date(2024, 0, 1),
+    windowType: "resume"
+  },
+  {
+    id: "contact",
+    name: "Contact",
+    type: "portfolio",
+    icon: <Mail className="size-6" />,
+    pinnedToTaskbar: false,
+    showOnDesktop: true,
+    desktopPosition: { x: 1, y: 0 },
+    dateModified: new Date(2024, 0, 1),
+    windowType: "contact"
   },
 
   // Third-party Applications
@@ -53,8 +92,7 @@ export const applications: Application[] = [
     icon: <ChromeIcon className="size-5" />,
     href: "https://google.com",
     pinnedToTaskbar: true,
-    showOnDesktop: true,
-    desktopPosition: { x: 0, y: 1 },
+    showOnDesktop: false,
     dateModified: new Date(2024, 0, 1)
   },
   {
@@ -63,8 +101,7 @@ export const applications: Application[] = [
     type: "app",
     icon: <TerminalIcon className="size-5" />,
     pinnedToTaskbar: true,
-    showOnDesktop: true,
-    desktopPosition: { x: 0, y: 2 },
+    showOnDesktop: false,
     dateModified: new Date(2024, 0, 1)
   },
 
@@ -76,8 +113,7 @@ export const applications: Application[] = [
     icon: <FolderIcon className="size-6" />,
     path: "/Documents",
     dateModified: new Date(2024, 0, 20),
-    showOnDesktop: true,
-    desktopPosition: { x: 1, y: 0 }
+    showOnDesktop: false
   },
   {
     id: "downloads",
@@ -85,7 +121,8 @@ export const applications: Application[] = [
     type: "folder",
     icon: <FolderIcon className="size-6" />,
     path: "/Downloads",
-    dateModified: new Date(2024, 0, 25)
+    dateModified: new Date(2024, 0, 25),
+    showOnDesktop: false
   },
   {
     id: "desktop-folder",
@@ -93,25 +130,12 @@ export const applications: Application[] = [
     type: "folder",
     icon: <FolderIcon className="size-6" />,
     path: "/Desktop",
-    dateModified: new Date(2024, 0, 15)
-  },
-
-  // Sample file for desktop
-  {
-    id: "readme",
-    name: "README.txt",
-    type: "file",
-    icon: <FileText className="size-6" />,
-    path: "/Desktop/README.txt",
-    parentPath: "/Desktop",
-    size: 1024,
     dateModified: new Date(2024, 0, 15),
-    showOnDesktop: true,
-    desktopPosition: { x: 1, y: 1 }
+    showOnDesktop: false
   }
 ];
 
-// Helper functions with proper type assertions
+// Helper functions with proper type guards
 export const getTaskbarApps = (): TaskbarApp[] =>
   applications.filter((app): app is TaskbarApp => app.pinnedToTaskbar === true);
 
@@ -121,17 +145,17 @@ export const getDesktopItems = (): DesktopItem[] =>
       app.showOnDesktop === true && app.desktopPosition !== undefined
   );
 
-export const getThisPCItems = () =>
+export const getThisPCItems = (): FileSystemItem[] =>
   applications.filter((app) =>
     ["documents", "downloads", "desktop-folder"].includes(app.id)
   );
 
-export const getDesktopFolderItems = () =>
+export const getDesktopFolderItems = (): FileSystemItem[] =>
   applications.filter((app) => app.parentPath === "/Desktop");
 
-// Type exports
-export type DesktopItem = Application &
-  Required<Pick<Application, "showOnDesktop" | "desktopPosition">>;
-export type TaskbarApp = Application &
-  Required<Pick<Application, "pinnedToTaskbar">>;
-export type FileSystemItem = Application;
+// Utility function to get window type from application
+export const getWindowTypeFromApp = (app: Application): string | null => {
+  if (app.windowType) return app.windowType;
+  if (app.id === "this-pc" || app.type === "system") return "file-explorer";
+  return null;
+};
