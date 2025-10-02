@@ -9,13 +9,34 @@ import {
 } from "../components/Icons";
 import { FileText, Mail } from "lucide-react";
 import type {
-  Application,
   DesktopItem,
   TaskbarApp,
-  FileSystemItem
+  FileSystemItem,
+  ApplicationType,
+  WindowType
 } from "../types";
 
-export const applications: Application[] = [
+/**
+ * Legacy Application interface for backward compatibility
+ * This allows existing code to continue working while we migrate
+ */
+interface LegacyApplication {
+  id: string;
+  name: string;
+  type: ApplicationType;
+  icon: React.ReactNode;
+  href?: string;
+  path?: string;
+  parentPath?: string;
+  size?: number;
+  dateModified: Date;
+  pinnedToTaskbar?: boolean;
+  showOnDesktop?: boolean;
+  desktopPosition?: { x: number; y: number };
+  windowType?: WindowType;
+}
+
+export const applications: LegacyApplication[] = [
   // System Applications
   {
     id: "file-explorer",
@@ -135,15 +156,37 @@ export const applications: Application[] = [
   }
 ];
 
-// Helper functions with proper type guards
+// Helper functions to convert legacy applications to new types
 export const getTaskbarApps = (): TaskbarApp[] =>
-  applications.filter((app): app is TaskbarApp => app.pinnedToTaskbar === true);
+  applications
+    .filter((app) => app.pinnedToTaskbar === true)
+    .map((app) => ({
+      id: app.id,
+      name: app.name,
+      type: app.type,
+      windowType: app.windowType,
+      href: app.href,
+      metadata: {
+        dateModified: app.dateModified,
+        size: app.size
+      }
+    }));
 
 export const getDesktopItems = (): DesktopItem[] =>
-  applications.filter(
-    (app): app is DesktopItem =>
-      app.showOnDesktop === true && app.desktopPosition !== undefined
-  );
+  applications
+    .filter((app) => app.showOnDesktop === true && app.desktopPosition !== undefined)
+    .map((app) => ({
+      id: app.id,
+      name: app.name,
+      type: app.type,
+      position: app.desktopPosition!,
+      windowType: app.windowType,
+      href: app.href,
+      metadata: {
+        dateModified: app.dateModified,
+        size: app.size
+      }
+    }));
 
 export const getThisPCItems = (): FileSystemItem[] =>
   applications.filter((app) =>
@@ -154,7 +197,7 @@ export const getDesktopFolderItems = (): FileSystemItem[] =>
   applications.filter((app) => app.parentPath === "/Desktop");
 
 // Utility function to get window type from application
-export const getWindowTypeFromApp = (app: Application): string | null => {
+export const getWindowTypeFromApp = (app: LegacyApplication): string | null => {
   if (app.windowType) return app.windowType;
   if (app.id === "this-pc" || app.type === "system") return "file-explorer";
   return null;

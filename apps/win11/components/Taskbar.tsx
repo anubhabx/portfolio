@@ -10,45 +10,51 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from "@workspace/ui/components/tooltip";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger
+} from "@workspace/ui/components/context-menu";
 import { Separator } from "@workspace/ui/components/separator";
 import { WindowsIcon } from "./Icons";
 import { BatteryCharging, Volume2, Wifi } from "lucide-react";
 import { useWindowManager } from "@/components/WindowManager";
-import { getTaskbarApps, getWindowTypeFromApp } from "@/data/applications";
+import { useTaskbar } from "@/contexts/TaskbarContext";
+import { getAppMetadata, launchApp } from "@/lib/app-registry";
 import StartMenu from "@/components/StartMenu";
-import type { TaskbarProps, TaskbarApp } from "@/types";
+import type { TaskbarApp } from "@/types";
 
-export function Taskbar({
-  alignment = "center",
-  pinned = getTaskbarApps()
-}: TaskbarProps) {
+export interface TaskbarProps {
+  alignment?: "center" | "left";
+}
+
+export function Taskbar({ alignment = "center" }: TaskbarProps) {
   const [activeId, setActiveId] = React.useState<string | null>(null);
   const [isStartMenuOpen, setIsStartMenuOpen] = React.useState(false);
-  const { openWindow } = useWindowManager();
+  const { openWindow, windows } = useWindowManager();
+  const { apps, unpinApp, isAppPinned } = useTaskbar();
 
   const handleLaunch = (app: TaskbarApp) => {
     setActiveId(app.id);
-
-    if (app.href) {
-      window.open(app.href, "_blank", "noopener,noreferrer");
-    } else {
-      const windowType = getWindowTypeFromApp(app);
-      if (windowType) {
-        openWindow({
-          type: windowType as any,
-          title: app.name,
-          props: app.id === "file-explorer" ? { initialPath: "This PC" } : {}
-        });
-      } else {
-        alert(`Opening ${app.name}...`);
-      }
-    }
-
+    launchApp(app.id, openWindow);
     setTimeout(() => setActiveId(null), 1000);
   };
 
   const handleStartClick = () => {
     setIsStartMenuOpen(!isStartMenuOpen);
+  };
+
+  const handleUnpin = (appId: string) => {
+    unpinApp(appId);
+  };
+
+  // Check if an app has open windows
+  const getAppWindows = (appId: string) => {
+    const metadata = getAppMetadata(appId);
+    if (!metadata?.windowType) return [];
+    return windows.filter((w) => w.type === metadata.windowType);
   };
 
   return (
@@ -77,14 +83,24 @@ export function Taskbar({
               <WindowsIcon className="size-5" />
             </TaskbarButton>
 
-            {pinned.map((app) => (
-              <TaskbarIcon
-                key={app.id}
-                app={app}
-                active={activeId === app.id}
-                onLaunch={() => handleLaunch(app)}
-              />
-            ))}
+            {apps.map((app) => {
+              const metadata = getAppMetadata(app.id);
+              const appWindows = getAppWindows(app.id);
+              const hasOpenWindows = appWindows.length > 0;
+
+              return (
+                <TaskbarIcon
+                  key={app.id}
+                  app={app}
+                  icon={metadata?.icon}
+                  active={activeId === app.id}
+                  hasOpenWindows={hasOpenWindows}
+                  isPinned={isAppPinned(app.id)}
+                  onLaunch={() => handleLaunch(app)}
+                  onUnpin={() => handleUnpin(app.id)}
+                />
+              );
+            })}
           </div>
 
           <div className="flex items-center gap-2">
@@ -133,36 +149,79 @@ const TaskbarButton = React.forwardRef<HTMLButtonElement, TaskbarButtonProps>(
 );
 TaskbarButton.displayName = "TaskbarButton";
 
-const TaskbarIcon = React.forwardRef<
-  HTMLButtonElement,
-  { app: TaskbarApp; active?: boolean; onLaunch: () => void }
->(({ app, active, onLaunch }, ref) => {
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <TaskbarButton
-          ref={ref}
-          onClick={onLaunch}
-          active={active}
-          aria-label={app.name}
-        >
-          {app.icon}
-          <motion.span
-            layoutId={`indicator-${app.id}`}
-            className={cn(
-              "absolute -bottom-1 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-cyan-400/90",
-              active ? "opacity-100" : "opacity-0"
-            )}
-            aria-hidden
-          />
-        </TaskbarButton>
-      </TooltipTrigger>
-      <TooltipContent side="top" className="text-xs">
-        {app.name}
-      </TooltipContent>
-    </Tooltip>
-  );
-});
+type TaskbarIconProps = {
+  app: TaskbarApp;
+  icon?: React.ReactNode;
+  active?: boolean;
+  hasOpenWindows?: boolean;
+  isPinned: boolean;
+  onLaunch: () => void;
+  onUnpin: () => void;
+};
+
+const TaskbarIcon = React.forwardRef<HTMLButtonElement, TaskbarIconProps>(
+  (
+    { app, icon, active, hasOpenWindows, isPinned, onLaunch, onUnpin },
+    ref
+  ) => {
+    return (
+      <ContextMenu>
+        <ContextMenuTrigger asChild>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <TaskbarButton
+                ref={ref}
+                onClick={onLaunch}
+                active={active || hasOpenWindows}
+                aria-label={app.name}
+              >
+                {icon}
+                <motion.span
+                  layoutId={`indicator-${app.id}`}
+                  className={cn(
+                    "absolute -bottom-1 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-cyan-400/90",
+                    active || hasOpenWindows ? "opacity-100" : "opacity-0"
+                  )}
+                  aria-hidden
+                />
+              </TaskbarButton>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="text-xs">
+              {app.name}
+              {hasOpenWindows && " (Running)"}
+            </TooltipContent>
+          </Tooltip>
+        </ContextMenuTrigger>
+
+        <ContextMenuContent className="w-48">
+          {!hasOpenWindows && (
+            <ContextMenuItem onClick={onLaunch}>
+              <Button
+                variant="ghost"
+                className="w-full justify-start p-0 h-auto"
+              >
+                Open
+              </Button>
+            </ContextMenuItem>
+          )}
+          {isPinned && (
+            <>
+              <ContextMenuSeparator />
+              <ContextMenuItem onClick={onUnpin}>
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start p-0 h-auto"
+                >
+                  Unpin from Taskbar
+                </Button>
+              </ContextMenuItem>
+            </>
+          )}
+        </ContextMenuContent>
+      </ContextMenu>
+    );
+  }
+);
 TaskbarIcon.displayName = "TaskbarIcon";
 
 function Clock() {

@@ -8,7 +8,18 @@ import { Input } from "@workspace/ui/components/input";
 import { Search, Power, User } from "lucide-react";
 import { useWindowManager } from "@/components/WindowManager";
 import { applications } from "@/data/applications";
-import type { Application } from "@/types";
+
+// Use the legacy application type from data/applications.tsx
+interface AppItem {
+  id: string;
+  name: string;
+  type: string;
+  icon?: React.ReactNode;
+  href?: string;
+  windowType?: string;
+  pinnedToTaskbar?: boolean;
+  dateModified?: Date;
+}
 
 export type StartMenuProps = {
   isOpen: boolean;
@@ -34,7 +45,7 @@ export function StartMenu({ isOpen, onClose }: StartMenuProps) {
     );
   }, [searchQuery, pinnedApps]);
 
-  const handleAppClick = (app: Application) => {
+  const handleAppClick = (app: AppItem) => {
     if (app.href) {
       window.open(app.href, "_blank", "noopener,noreferrer");
     } else if (app.id === "file-explorer" || app.type === "system") {
@@ -209,7 +220,7 @@ export function StartMenu({ isOpen, onClose }: StartMenuProps) {
 }
 
 type AppTileProps = {
-  app: Application;
+  app: AppItem;
   onClick: () => void;
 };
 
@@ -235,7 +246,7 @@ function AppTile({ app, onClick }: AppTileProps) {
 }
 
 type RecentItemProps = {
-  item: Application;
+  item: AppItem;
   onClick: () => void;
 };
 
@@ -253,7 +264,7 @@ function RecentItem({ item, onClick }: RecentItemProps) {
       <div className="flex-1 min-w-0">
         <div className="text-sm text-white/90 truncate">{item.name}</div>
         <div className="text-xs text-white/50">
-          {item.dateModified.toLocaleDateString()}
+          {item.dateModified?.toLocaleDateString() || "Recently used"}
         </div>
       </div>
     </motion.button>

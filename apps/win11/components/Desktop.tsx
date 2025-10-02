@@ -18,18 +18,23 @@ import {
 } from "@workspace/ui/components/tooltip";
 import { Button } from "@workspace/ui/components/button";
 import { useWindowManager } from "./WindowManager";
-import { getDesktopItems, getWindowTypeFromApp } from "@/data/applications";
-import type { DesktopProps, DesktopItem } from "@/types";
+import { useDesktop } from "@/contexts/DesktopContext";
+import { useTaskbar } from "@/contexts/TaskbarContext";
+import { getAppMetadata, launchApp } from "@/lib/app-registry";
+import type { DesktopItem } from "@/types";
 
-export function Desktop({
-  items = getDesktopItems(),
-  gridSize = 80,
-  padding = 16
-}: DesktopProps) {
+export interface DesktopProps {
+  gridSize?: number;
+  padding?: number;
+}
+
+export function Desktop({ gridSize = 80, padding = 16 }: DesktopProps) {
   const [selectedItems, setSelectedItems] = React.useState<Set<string>>(
     new Set()
   );
   const { openWindow } = useWindowManager();
+  const { items, removeItem } = useDesktop();
+  const { pinApp, isAppPinned } = useTaskbar();
 
   const handleDesktopClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -43,20 +48,25 @@ export function Desktop({
   };
 
   const handleItemDoubleClick = (item: DesktopItem) => {
-    if (item.href) {
-      window.open(item.href, "_blank", "noopener,noreferrer");
-    } else {
-      const windowType = getWindowTypeFromApp(item);
-      if (windowType) {
-        openWindow({
-          type: windowType as any,
-          title: item.name,
-          props: item.id === "this-pc" ? { initialPath: "This PC" } : {}
-        });
-      } else {
-        alert(`Opening ${item.name}...`);
-      }
+    launchApp(item.id, openWindow);
+  };
+
+  const handlePinToTaskbar = (item: DesktopItem) => {
+    if (!isAppPinned(item.id)) {
+      pinApp({
+        id: item.id,
+        name: item.name,
+        type: item.type,
+        windowType: item.windowType,
+        href: item.href,
+        metadata: item.metadata
+      });
     }
+  };
+
+  const handleRemoveFromDesktop = (item: DesktopItem) => {
+    removeItem(item.id);
+    setSelectedItems(new Set());
   };
 
   return (
@@ -74,17 +84,24 @@ export function Desktop({
             aria-label="Desktop"
           >
             {/* Desktop items */}
-            {items.map((item) => (
-              <DesktopIcon
-                key={item.id}
-                item={item}
-                gridSize={gridSize}
-                padding={padding}
-                selected={selectedItems.has(item.id)}
-                onClick={(e) => handleItemClick(e, item)}
-                onDoubleClick={() => handleItemDoubleClick(item)}
-              />
-            ))}
+            {items.map((item) => {
+              const metadata = getAppMetadata(item.id);
+              return (
+                <DesktopIcon
+                  key={item.id}
+                  item={item}
+                  icon={metadata?.icon}
+                  gridSize={gridSize}
+                  padding={padding}
+                  selected={selectedItems.has(item.id)}
+                  onClick={(e) => handleItemClick(e, item)}
+                  onDoubleClick={() => handleItemDoubleClick(item)}
+                  onPinToTaskbar={() => handlePinToTaskbar(item)}
+                  onRemove={() => handleRemoveFromDesktop(item)}
+                  isPinned={isAppPinned(item.id)}
+                />
+              );
+            })}
           </div>
         </ContextMenuTrigger>
 
@@ -113,58 +130,97 @@ export function Desktop({
 
 type DesktopIconProps = {
   item: DesktopItem;
+  icon?: React.ReactNode;
   gridSize: number;
   padding: number;
   selected: boolean;
   onClick: (e: React.MouseEvent) => void;
   onDoubleClick: () => void;
+  onPinToTaskbar: () => void;
+  onRemove: () => void;
+  isPinned: boolean;
 };
 
 const DesktopIcon = React.memo(
   ({
     item,
+    icon,
     gridSize,
     padding,
     selected,
     onClick,
-    onDoubleClick
+    onDoubleClick,
+    onPinToTaskbar,
+    onRemove,
+    isPinned
   }: DesktopIconProps) => {
     return (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <motion.button
-            className={cn(
-              "absolute flex flex-col items-center justify-center gap-1 p-2 rounded-lg",
-              "text-white/90 hover:text-white transition-colors",
-              "focus:outline-none",
-              selected && "bg-blue-500/20 ring-1 ring-blue-400/50"
-            )}
-            style={{
-              left: item.desktopPosition.x * gridSize + padding,
-              top: item.desktopPosition.y * gridSize + padding,
-              width: gridSize - 8,
-              height: gridSize - 8
-            }}
-            onClick={onClick}
-            onDoubleClick={onDoubleClick}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <div className="flex items-center justify-center mb-1">
-              {item.icon}
-            </div>
-            <span
-              className="text-xs text-center leading-tight max-w-full truncate px-1 py-0.5 rounded bg-black/30 backdrop-blur-sm"
-              style={{ textShadow: "0 1px 2px rgba(0,0,0,0.8)" }}
-            >
+      <ContextMenu>
+        <ContextMenuTrigger asChild>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <motion.button
+                className={cn(
+                  "absolute flex flex-col items-center justify-center gap-1 p-2 rounded-lg",
+                  "text-white/90 hover:text-white transition-colors",
+                  "focus:outline-none",
+                  selected && "bg-blue-500/20 ring-1 ring-blue-400/50"
+                )}
+                style={{
+                  left: item.position.x * gridSize + padding,
+                  top: item.position.y * gridSize + padding,
+                  width: gridSize - 8,
+                  height: gridSize - 8
+                }}
+                onClick={onClick}
+                onDoubleClick={onDoubleClick}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <div className="flex items-center justify-center mb-1">
+                  {icon}
+                </div>
+                <span
+                  className="text-xs text-center leading-tight max-w-full truncate px-1 py-0.5 rounded bg-black/30 backdrop-blur-sm"
+                  style={{ textShadow: "0 1px 2px rgba(0,0,0,0.8)" }}
+                >
+                  {item.name}
+                </span>
+              </motion.button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" className="text-xs">
               {item.name}
-            </span>
-          </motion.button>
-        </TooltipTrigger>
-        <TooltipContent side="bottom" className="text-xs">
-          {item.name}
-        </TooltipContent>
-      </Tooltip>
+            </TooltipContent>
+          </Tooltip>
+        </ContextMenuTrigger>
+
+        <ContextMenuContent className="w-48">
+          <ContextMenuItem onClick={onDoubleClick}>
+            <Button variant="ghost" className="w-full justify-start p-0 h-auto">
+              Open
+            </Button>
+          </ContextMenuItem>
+          {!isPinned && (
+            <ContextMenuItem onClick={onPinToTaskbar}>
+              <Button
+                variant="ghost"
+                className="w-full justify-start p-0 h-auto"
+              >
+                Pin to Taskbar
+              </Button>
+            </ContextMenuItem>
+          )}
+          <ContextMenuSeparator />
+          <ContextMenuItem onClick={onRemove}>
+            <Button
+              variant="ghost"
+              className="w-full justify-start p-0 h-auto text-destructive"
+            >
+              Remove from Desktop
+            </Button>
+          </ContextMenuItem>
+        </ContextMenuContent>
+      </ContextMenu>
     );
   }
 );

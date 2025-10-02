@@ -2,6 +2,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import "@workspace/ui/globals.css";
 import { Providers } from "@/components/providers";
+import { DesktopProvider } from "@/contexts/DesktopContext";
+import { TaskbarProvider } from "@/contexts/TaskbarContext";
 import { WindowManagerProvider } from "@/components/WindowManager";
 import Taskbar from "@/components/Taskbar";
 import Desktop from "@/components/Desktop";
@@ -28,13 +30,17 @@ export default function RootLayout({
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >
         <Providers>
-          <WindowManagerProvider>
-            <Wallpaper variant="default" />
-            <div className="min-h-svh bg-gradient-to-br from-slate-900 via-slate-800 to-neutral-900 text-foreground/90">
-              <Desktop />
-            </div>
-            <Taskbar />
-          </WindowManagerProvider>
+          <DesktopProvider>
+            <TaskbarProvider>
+              <WindowManagerProvider>
+                <Wallpaper variant="default" />
+                <div className="min-h-svh bg-gradient-to-br from-slate-900 via-slate-800 to-neutral-900 text-foreground/90">
+                  <Desktop />
+                </div>
+                <Taskbar />
+              </WindowManagerProvider>
+            </TaskbarProvider>
+          </DesktopProvider>
         </Providers>
       </body>
     </html>

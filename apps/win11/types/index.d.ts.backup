@@ -19,49 +19,7 @@ export type WindowType =
   | "notepad"
   | "calculator";
 
-// NEW: Simplified Desktop Item (no longer extends Application)
-export interface DesktopItem {
-  id: string;
-  name: string;
-  type: ApplicationType;
-  position: { x: number; y: number };
-  windowType?: WindowType;
-  href?: string;
-  metadata?: {
-    dateModified?: Date;
-    size?: number;
-    [key: string]: any;
-  };
-}
-
-// NEW: Simplified Taskbar App (no longer extends Application)
-export interface TaskbarApp {
-  id: string;
-  name: string;
-  type: ApplicationType;
-  windowType?: WindowType;
-  href?: string;
-  metadata?: {
-    dateModified?: Date;
-    [key: string]: any;
-  };
-}
-
-// NEW: File System Item (for File Explorer)
-export interface FileSystemItem {
-  id: string;
-  name: string;
-  type: ApplicationType;
-  path?: string;
-  parentPath?: string;
-  size?: number;
-  dateModified: Date;
-  icon?: React.ReactNode;
-}
-
-// LEGACY: Keep old Application interface for backward compatibility
-// but mark as deprecated
-/** @deprecated Use DesktopItem, TaskbarApp, or FileSystemItem instead */
+// Base Application Interface
 export interface Application {
   id: string;
   name: string;
@@ -75,8 +33,18 @@ export interface Application {
   pinnedToTaskbar?: boolean;
   showOnDesktop?: boolean;
   desktopPosition?: { x: number; y: number };
+  // Map application ID to window type for portfolio apps
   windowType?: WindowType;
 }
+
+// Specialized Application Types
+export type DesktopItem = Application &
+  Required<Pick<Application, "showOnDesktop" | "desktopPosition">>;
+
+export type TaskbarApp = Application &
+  Required<Pick<Application, "pinnedToTaskbar">>;
+
+export type FileSystemItem = Application;
 
 // Window Manager Types
 export interface OpenWindow {
@@ -91,8 +59,6 @@ export interface WindowManagerContextType {
   openWindow: (window: Omit<OpenWindow, "id">) => void;
   closeWindow: (id: string) => void;
   focusWindow: (id: string) => void;
-  minimizeWindow: (id: string) => void;
-  maximizeWindow: (id: string) => void;
 }
 
 // Window Component Props
