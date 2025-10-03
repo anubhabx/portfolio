@@ -1,6 +1,6 @@
 import React from "react";
 
-export const ChromeIcon = ({ className }: { className?: string }) => {
+export const ChromeIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -8,7 +8,7 @@ export const ChromeIcon = ({ className }: { className?: string }) => {
       viewBox="0 0 48 48"
       height="48"
       width="48"
-      className={className}
+      {...props}
     >
       <defs>
         <linearGradient
@@ -67,7 +67,7 @@ export const ChromeIcon = ({ className }: { className?: string }) => {
   );
 };
 
-export const ExplorerIcon = ({ className }: { className?: string }) => {
+export const ExplorerIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -76,7 +76,7 @@ export const ExplorerIcon = ({ className }: { className?: string }) => {
       height="252pt"
       viewBox="0 0 252 252"
       version="1.1"
-      className={className}
+      {...props}
     >
       <defs>
         <linearGradient
@@ -282,7 +282,7 @@ export const ExplorerIcon = ({ className }: { className?: string }) => {
   );
 };
 
-export const TerminalIcon = ({ className }: { className?: string }) => {
+export const TerminalIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       width="48"
@@ -293,7 +293,7 @@ export const TerminalIcon = ({ className }: { className?: string }) => {
       id="svg136"
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
-      className={className}
+      {...props}
     >
       <path
         d="M 0,7 H 16 V 0 H 2 C 0.9,0 0,0.9 0,2 Z"
@@ -612,14 +612,14 @@ export const TerminalIcon = ({ className }: { className?: string }) => {
   );
 };
 
-export const FolderIcon = ({ className }: { className?: string }) => {
+export const FolderIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 48 48"
       width="48px"
       height="48px"
-      className={className}
+      {...props}
     >
       <linearGradient
         id="Om5yvFr6YrdlC0q2Vet0Ha"
@@ -720,7 +720,7 @@ export const FolderIcon = ({ className }: { className?: string }) => {
   );
 };
 
-export const ProgramFolderIcon = ({ className }: { className?: string }) => {
+export const ProgramFolderIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -729,7 +729,7 @@ export const ProgramFolderIcon = ({ className }: { className?: string }) => {
       height="48px"
       viewBox="0 0 48 48"
       version="1.1"
-      className={className}
+      {...props}
     >
       <defs>
         <filter
@@ -809,11 +809,7 @@ export const WindowsIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-export const WindowsUserFolderIcon = ({
-  className
-}: {
-  className?: string;
-}) => {
+export const WindowsUserFolderIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -822,7 +818,7 @@ export const WindowsUserFolderIcon = ({
       height="48px"
       viewBox="0 0 48 48"
       version="1.1"
-      className={className}
+      {...props}
     >
       <defs>
         <filter
@@ -904,14 +900,14 @@ export const WindowsUserFolderIcon = ({
   );
 };
 
-export const PDFIcon = ({ className }: { className?: string }) => {
+export const PDFIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="75.320129mm"
       height="92.604164mm"
       viewBox="0 0 75.320129 92.604164"
-      className={className}
+      {...props}
     >
       <g transform="translate(53.548057 -183.975276) scale(1.4843)">
         <path
@@ -992,7 +988,7 @@ export const PDFIcon = ({ className }: { className?: string }) => {
   );
 };
 
-export const MailIcon = ({ className }: { className?: string }) => {
+export const MailIcon = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       width="256"
@@ -1000,7 +996,7 @@ export const MailIcon = ({ className }: { className?: string }) => {
       viewBox="0 0 256 256"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={className}
+      {...props}
     >
       <path
         fillRule="evenodd"
