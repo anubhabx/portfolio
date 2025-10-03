@@ -84,6 +84,7 @@ export interface OpenWindow {
   type: WindowType;
   title: string;
   props?: Record<string, any>;
+  isMinimized?: boolean;
 }
 
 export interface WindowManagerContextType {
@@ -92,13 +93,18 @@ export interface WindowManagerContextType {
   closeWindow: (id: string) => void;
   focusWindow: (id: string) => void;
   minimizeWindow: (id: string) => void;
-  maximizeWindow: (id: string) => void;
+  restoreWindow: (id: string) => void;
 }
 
 // Window Component Props
 export interface BaseWindowProps {
   isOpen: boolean;
   onClose: () => void;
+  onMinimize?: () => void;
+  onFocus?: () => void;
+  windowId?: string;
+  zIndex?: number;
+  isFocused?: boolean;
 }
 
 export interface FileExplorerProps extends BaseWindowProps {

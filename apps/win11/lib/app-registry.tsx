@@ -4,14 +4,16 @@ import {
   ChromeIcon,
   TerminalIcon,
   WindowsUserFolderIcon,
-  ProgramFolderIcon
+  ProgramFolderIcon,
+  PDFIcon,
+  FolderIcon
 } from "@/components/Icons";
-import { FileText, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import type { WindowType } from "@/types";
 
 /**
  * Application Registry
- * 
+ *
  * This registry maps application IDs to their visual properties (icons, etc.)
  * and window types. It serves as a single source of truth for application metadata.
  */
@@ -29,57 +31,75 @@ export const APP_REGISTRY: Record<string, AppMetadata> = {
   "file-explorer": {
     id: "file-explorer",
     name: "File Explorer",
-    icon: <ExplorerIcon className="size-5" />,
+    icon: <ExplorerIcon />,
     windowType: "file-explorer",
     description: "Browse files and folders"
   },
   "this-pc": {
     id: "this-pc",
     name: "This PC",
-    icon: <ExplorerIcon className="size-8" />,
+    icon: <ExplorerIcon />,
     windowType: "file-explorer",
     description: "Access your computer's drives and folders"
   },
   "about-me": {
     id: "about-me",
     name: "About Me",
-    icon: <WindowsUserFolderIcon className="size-6" />,
+    icon: <WindowsUserFolderIcon />,
     windowType: "about-me",
     description: "Learn more about me"
   },
   "my-projects": {
     id: "my-projects",
     name: "My Projects",
-    icon: <ProgramFolderIcon className="size-6" />,
+    icon: <ProgramFolderIcon />,
     windowType: "my-projects",
     description: "View my portfolio projects"
   },
   resume: {
     id: "resume",
     name: "Resume",
-    icon: <FileText className="size-6" />,
+    icon: <PDFIcon />,
     windowType: "resume",
     description: "View my resume and experience"
   },
   contact: {
     id: "contact",
     name: "Contact",
-    icon: <Mail className="size-6" />,
+    icon: <Mail />,
     windowType: "contact",
     description: "Get in touch with me"
   },
   chrome: {
     id: "chrome",
     name: "Google Chrome",
-    icon: <ChromeIcon className="size-5" />,
+    icon: <ChromeIcon />,
     href: "https://google.com",
     description: "Web browser"
   },
   terminal: {
     id: "terminal",
     name: "Windows Terminal",
-    icon: <TerminalIcon className="size-5" />,
+    icon: <TerminalIcon />,
     description: "Command line interface"
+  },
+  documents: {
+    id: "documents",
+    name: "Documents",
+    icon: <FolderIcon />,
+    description: "Personal documents"
+  },
+  downloads: {
+    id: "downloads",
+    name: "Downloads",
+    icon: <FolderIcon />,
+    description: "Downloaded files"
+  },
+  "desktop-folder": {
+    id: "desktop-folder",
+    name: "Desktop",
+    icon: <FolderIcon />,
+    description: "Desktop folder"
   }
 };
 
@@ -93,10 +113,12 @@ export function getAppMetadata(id: string): AppMetadata | undefined {
 /**
  * Get icon for an application
  */
-export function getAppIcon(id: string): React.ReactNode {
+export function getAppIcon(id: string, className?: string): React.ReactNode {
   const app = APP_REGISTRY[id];
-  if (!app) return null;
-  return app.icon;
+  if (!app || !app.icon) return null;
+
+  // Clone the icon element and add className
+  return React.cloneElement(app.icon as React.ReactElement, { className });
 }
 
 /**
@@ -124,9 +146,10 @@ export function launchApp(
     openWindow({
       type: app.windowType,
       title: app.name,
-      props: id === "this-pc" || id === "file-explorer" 
-        ? { initialPath: "This PC" } 
-        : {}
+      props:
+        id === "this-pc" || id === "file-explorer"
+          ? { initialPath: "This PC" }
+          : {}
     });
     return true;
   }

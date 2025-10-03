@@ -128,28 +128,10 @@ function getDefaultPinnedApps(): TaskbarApp[] {
       }
     },
     {
-      id: "about-me",
-      name: "About Me",
-      type: "portfolio",
-      windowType: "about-me",
-      metadata: {
-        dateModified: new Date(2024, 0, 1)
-      }
-    },
-    {
       id: "my-projects",
       name: "My Projects",
       type: "portfolio",
       windowType: "my-projects",
-      metadata: {
-        dateModified: new Date(2024, 0, 1)
-      }
-    },
-    {
-      id: "resume",
-      name: "Resume",
-      type: "portfolio",
-      windowType: "resume",
       metadata: {
         dateModified: new Date(2024, 0, 1)
       }

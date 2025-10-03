@@ -22,7 +22,7 @@ import { WindowsIcon } from "./Icons";
 import { BatteryCharging, Volume2, Wifi } from "lucide-react";
 import { useWindowManager } from "@/components/WindowManager";
 import { useTaskbar } from "@/contexts/TaskbarContext";
-import { getAppMetadata, launchApp } from "@/lib/app-registry";
+import { getAppIcon, getAppMetadata, launchApp } from "@/lib/app-registry";
 import StartMenu from "@/components/StartMenu";
 import type { TaskbarApp } from "@/types";
 
@@ -33,13 +33,24 @@ export interface TaskbarProps {
 export function Taskbar({ alignment = "center" }: TaskbarProps) {
   const [activeId, setActiveId] = React.useState<string | null>(null);
   const [isStartMenuOpen, setIsStartMenuOpen] = React.useState(false);
-  const { openWindow, windows } = useWindowManager();
+  const { openWindow, windows, restoreWindow } = useWindowManager();
   const { apps, unpinApp, isAppPinned } = useTaskbar();
 
   const handleLaunch = (app: TaskbarApp) => {
-    setActiveId(app.id);
-    launchApp(app.id, openWindow);
-    setTimeout(() => setActiveId(null), 1000);
+    // Check if app has minimized windows
+    const metadata = getAppMetadata(app.id);
+    const minimizedWindow = windows.find(
+      (w) => w.type === metadata?.windowType && w.isMinimized
+    );
+
+    if (minimizedWindow) {
+      // Restore minimized window instead of opening new one
+      restoreWindow(minimizedWindow.id);
+    } else {
+      setActiveId(app.id);
+      launchApp(app.id, openWindow);
+      setTimeout(() => setActiveId(null), 1000);
+    }
   };
 
   const handleStartClick = () => {
@@ -50,7 +61,7 @@ export function Taskbar({ alignment = "center" }: TaskbarProps) {
     unpinApp(appId);
   };
 
-  // Check if an app has open windows
+  // Check if an app has open windows (including minimized)
   const getAppWindows = (appId: string) => {
     const metadata = getAppMetadata(appId);
     if (!metadata?.windowType) return [];
@@ -92,7 +103,7 @@ export function Taskbar({ alignment = "center" }: TaskbarProps) {
                 <TaskbarIcon
                   key={app.id}
                   app={app}
-                  icon={metadata?.icon}
+                  icon={getAppIcon(app.id, "size-5")}
                   active={activeId === app.id}
                   hasOpenWindows={hasOpenWindows}
                   isPinned={isAppPinned(app.id)}
@@ -115,12 +126,12 @@ export function Taskbar({ alignment = "center" }: TaskbarProps) {
             </div>
           </div>
         </div>
-
-        <StartMenu
-          isOpen={isStartMenuOpen}
-          onClose={() => setIsStartMenuOpen(false)}
-        />
       </div>
+
+      <StartMenu
+        isOpen={isStartMenuOpen}
+        onClose={() => setIsStartMenuOpen(false)}
+      />
     </TooltipProvider>
   );
 }
@@ -134,7 +145,6 @@ const TaskbarButton = React.forwardRef<HTMLButtonElement, TaskbarButtonProps>(
     <Button
       ref={ref}
       variant="ghost"
-      size="sm"
       className={cn(
         "relative size-10 p-0 rounded-lg",
         "text-foreground/80 hover:text-foreground",
@@ -160,10 +170,7 @@ type TaskbarIconProps = {
 };
 
 const TaskbarIcon = React.forwardRef<HTMLButtonElement, TaskbarIconProps>(
-  (
-    { app, icon, active, hasOpenWindows, isPinned, onLaunch, onUnpin },
-    ref
-  ) => {
+  ({ app, icon, active, hasOpenWindows, isPinned, onLaunch, onUnpin }, ref) => {
     return (
       <ContextMenu>
         <ContextMenuTrigger asChild>
@@ -175,11 +182,13 @@ const TaskbarIcon = React.forwardRef<HTMLButtonElement, TaskbarIconProps>(
                 active={active || hasOpenWindows}
                 aria-label={app.name}
               >
-                {icon}
+                <div className="flex items-center justify-center size-8 w-full h-full">
+                  {icon}
+                </div>
                 <motion.span
                   layoutId={`indicator-${app.id}`}
                   className={cn(
-                    "absolute -bottom-1 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-cyan-400/90",
+                    "absolute bottom-0 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-cyan-400/90",
                     active || hasOpenWindows ? "opacity-100" : "opacity-0"
                   )}
                   aria-hidden

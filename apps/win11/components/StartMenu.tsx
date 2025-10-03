@@ -7,18 +7,14 @@ import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Search, Power, User } from "lucide-react";
 import { useWindowManager } from "@/components/WindowManager";
-import { applications } from "@/data/applications";
+import { APP_REGISTRY, launchApp, getAppIcon } from "@/lib/app-registry";
 
-// Use the legacy application type from data/applications.tsx
 interface AppItem {
   id: string;
   name: string;
-  type: string;
   icon?: React.ReactNode;
-  href?: string;
   windowType?: string;
-  pinnedToTaskbar?: boolean;
-  dateModified?: Date;
+  href?: string;
 }
 
 export type StartMenuProps = {
@@ -30,33 +26,39 @@ export function StartMenu({ isOpen, onClose }: StartMenuProps) {
   const [searchQuery, setSearchQuery] = React.useState("");
   const { openWindow } = useWindowManager();
 
-  const pinnedApps = applications.filter(
-    (app) => app.pinnedToTaskbar || app.type === "app"
+  // Convert APP_REGISTRY to array format
+  const allApps = React.useMemo(
+    () =>
+      Object.values(APP_REGISTRY).map((app) => ({
+        id: app.id,
+        name: app.name,
+        icon: app.icon,
+        windowType: app.windowType,
+        href: app.href
+      })),
+    []
   );
 
-  const recentFiles = applications
-    .filter((app) => app.type === "file" || app.type === "folder")
-    .slice(0, 6);
+  // Show apps that should appear in start menu (exclude system folders)
+  const pinnedApps = React.useMemo(
+    () =>
+      allApps.filter(
+        (app) => !["documents", "downloads", "desktop-folder"].includes(app.id)
+      ),
+    [allApps]
+  );
+
+  const recentFiles: AppItem[] = []; // Can be populated from recent activity
 
   const filteredApps = React.useMemo(() => {
     if (!searchQuery) return pinnedApps;
-    return applications.filter((app) =>
+    return allApps.filter((app) =>
       app.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [searchQuery, pinnedApps]);
+  }, [searchQuery, pinnedApps, allApps]);
 
   const handleAppClick = (app: AppItem) => {
-    if (app.href) {
-      window.open(app.href, "_blank", "noopener,noreferrer");
-    } else if (app.id === "file-explorer" || app.type === "system") {
-      openWindow({
-        type: "file-explorer",
-        title: "File Explorer",
-        props: { initialPath: "This PC" }
-      });
-    } else {
-      console.log(`Opening ${app.name}...`);
-    }
+    launchApp(app.id, openWindow);
     onClose();
   };
 
@@ -236,7 +238,7 @@ function AppTile({ app, onClick }: AppTileProps) {
       whileTap={{ scale: 0.95 }}
     >
       <div className="mb-2 text-white/90 group-hover:text-white">
-        {app.icon}
+        {getAppIcon(app.id, "size-8")}
       </div>
       <span className="text-xs text-white/70 group-hover:text-white leading-tight line-clamp-2">
         {app.name}
@@ -263,9 +265,6 @@ function RecentItem({ item, onClick }: RecentItemProps) {
       <div className="text-white/90">{item.icon}</div>
       <div className="flex-1 min-w-0">
         <div className="text-sm text-white/90 truncate">{item.name}</div>
-        <div className="text-xs text-white/50">
-          {item.dateModified?.toLocaleDateString() || "Recently used"}
-        </div>
       </div>
     </motion.button>
   );

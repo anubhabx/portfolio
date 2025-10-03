@@ -152,6 +152,15 @@ function getDefaultDesktopItems(): DesktopItem[] {
       metadata: {
         dateModified: new Date(2024, 0, 1)
       }
+    },
+    {
+      id: "chrome",
+      name: "Google Chrome",
+      type: "app",
+      position: { x: 1, y: 1 },
+      metadata: {
+        dateModified: new Date(2024, 0, 1)
+      }
     }
   ];
 }

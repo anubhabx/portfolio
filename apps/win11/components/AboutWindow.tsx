@@ -16,15 +16,33 @@ import Window from "@/components/Window";
 export type AboutWindowProps = {
   isOpen: boolean;
   onClose: () => void;
+  onMinimize?: () => void;
+  onFocus?: () => void;
+  windowId?: string;
+  zIndex?: number;
+  isFocused?: boolean;
 };
 
-export function AboutWindow({ isOpen, onClose }: AboutWindowProps) {
+export function AboutWindow({ 
+  isOpen, 
+  onClose,
+  onMinimize,
+  onFocus,
+  windowId,
+  zIndex,
+  isFocused
+}: AboutWindowProps) {
   return (
     <Window
       title="About Me"
       icon={<User className="size-4" />}
       isOpen={isOpen}
       onClose={onClose}
+      onMinimize={onMinimize}
+      onFocus={onFocus}
+      windowId={windowId}
+      zIndex={zIndex}
+      isFocused={isFocused}
       className="min-w-[600px] min-h-[500px]"
     >
       <div className="p-6 space-y-6 overflow-auto h-full">

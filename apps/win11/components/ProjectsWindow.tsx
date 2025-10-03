@@ -23,6 +23,11 @@ import Window from "@/components/Window";
 export type ProjectsWindowProps = {
   isOpen: boolean;
   onClose: () => void;
+  onMinimize?: () => void;
+  onFocus?: () => void;
+  windowId?: string;
+  zIndex?: number;
+  isFocused?: boolean;
 };
 
 const projects = [
@@ -74,15 +79,22 @@ const projects = [
   }
 ];
 
-export function ProjectsWindow({ isOpen, onClose }: ProjectsWindowProps) {
-  const [selectedCategory, setSelectedCategory] = React.useState("all");
+export function ProjectsWindow({ 
+  isOpen, 
+  onClose,
+  onMinimize,
+  onFocus,
+  windowId,
+  zIndex,
+  isFocused
+}: ProjectsWindowProps) {
+  const [activeTab, setActiveTab] = React.useState("all");
 
-  const filteredProjects =
-    selectedCategory === "all"
-      ? projects
-      : projects.filter((project) => project.category === selectedCategory);
-
-  const featuredProjects = projects.filter((project) => project.featured);
+  const filteredProjects = React.useMemo(() => {
+    if (activeTab === "all") return projects;
+    if (activeTab === "featured") return projects.filter((p) => p.featured);
+    return projects.filter((p) => p.category === activeTab);
+  }, [activeTab]);
 
   return (
     <Window
@@ -90,7 +102,12 @@ export function ProjectsWindow({ isOpen, onClose }: ProjectsWindowProps) {
       icon={<FolderOpen className="size-4" />}
       isOpen={isOpen}
       onClose={onClose}
-      className="min-w-[800px] min-h-[600px]"
+      onMinimize={onMinimize}
+      onFocus={onFocus}
+      windowId={windowId}
+      zIndex={zIndex}
+      isFocused={isFocused}
+      className="min-w-[900px] min-h-[600px]"
     >
       <div className="p-6 h-full overflow-auto">
         <Tabs defaultValue="featured" className="h-full flex flex-col">
@@ -103,7 +120,7 @@ export function ProjectsWindow({ isOpen, onClose }: ProjectsWindowProps) {
 
           <TabsContent value="featured" className="flex-1 mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {featuredProjects.map((project) => (
+              {filteredProjects.map((project) => (
                 <ProjectCard key={project.id} project={project} />
               ))}
             </div>

@@ -20,6 +20,7 @@ export type WindowProps = {
   onClose: () => void;
   onMinimize?: () => void;
   onMaximize?: () => void;
+  onFocus?: () => void;
   className?: string;
   initialWidth?: number;
   initialHeight?: number;
@@ -27,7 +28,16 @@ export type WindowProps = {
   initialY?: number;
   maximizable?: boolean;
   minimizable?: boolean;
+  zIndex?: number;
+  isFocused?: boolean;
+  windowId?: string; // For persistence key
 };
+
+interface WindowState {
+  position: { x: number; y: number };
+  size: { width: number; height: number };
+  isMaximized: boolean;
+}
 
 export function Window({
   title,
@@ -37,46 +47,81 @@ export function Window({
   onClose,
   onMinimize,
   onMaximize,
+  onFocus,
   className,
   initialWidth = 480,
   initialHeight = 300,
   initialX = 100,
   initialY = 50,
   maximizable = true,
-  minimizable = true
+  minimizable = true,
+  zIndex = 49,
+  isFocused = false,
+  windowId
 }: WindowProps) {
-  const [isMaximized, setIsMaximized] = React.useState(false);
-  const [isDragging, setIsDragging] = React.useState(false);
-  const [dragStart, setDragStart] = React.useState({ x: 0, y: 0 });
-  const [position, setPosition] = React.useState({ x: initialX, y: initialY });
-  const [size] = React.useState({
-    width: initialWidth,
-    height: initialHeight
+  const TASKBAR_HEIGHT = 48;
+  const persistenceKey = windowId ? `window-state-${windowId}` : null;
+
+  // Load saved state or use defaults
+  const [windowState, setWindowState] = React.useState<WindowState>(() => {
+    if (persistenceKey) {
+      const saved = localStorage.getItem(persistenceKey);
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error("Failed to parse window state:", e);
+        }
+      }
+    }
+    return {
+      position: { x: initialX, y: initialY },
+      size: { width: initialWidth, height: initialHeight },
+      isMaximized: false
+    };
   });
 
-  // Taskbar height - adjust this to match your taskbar
-  const TASKBAR_HEIGHT = 48;
+  const [isDragging, setIsDragging] = React.useState(false);
+  const [dragStart, setDragStart] = React.useState({ x: 0, y: 0 });
+
+  // Save state to localStorage whenever it changes
+  React.useEffect(() => {
+    if (persistenceKey) {
+      localStorage.setItem(persistenceKey, JSON.stringify(windowState));
+    }
+  }, [windowState, persistenceKey]);
+
+  // Handle window focus on click
+  const handleWindowClick = () => {
+    if (!isFocused) {
+      onFocus?.();
+    }
+  };
 
   // Handle window dragging
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (isMaximized) return;
+    if (windowState.isMaximized) return;
     setIsDragging(true);
     setDragStart({
-      x: e.clientX - position.x,
-      y: e.clientY - position.y
+      x: e.clientX - windowState.position.x,
+      y: e.clientY - windowState.position.y
     });
+    onFocus?.(); // Focus when dragging starts
   };
 
   const handleMouseMove = React.useCallback(
     (e: MouseEvent) => {
-      if (isDragging && !isMaximized) {
-        setPosition({
-          x: e.clientX - dragStart.x,
-          y: Math.max(0, e.clientY - dragStart.y)
-        });
+      if (isDragging && !windowState.isMaximized) {
+        setWindowState((prev) => ({
+          ...prev,
+          position: {
+            x: e.clientX - dragStart.x,
+            y: Math.max(0, e.clientY - dragStart.y)
+          }
+        }));
       }
     },
-    [isDragging, dragStart, isMaximized]
+    [isDragging, dragStart, windowState.isMaximized]
   );
 
   const handleMouseUp = React.useCallback(() => {
@@ -96,7 +141,10 @@ export function Window({
 
   // Handle maximize/restore
   const handleMaximize = () => {
-    setIsMaximized(!isMaximized);
+    setWindowState((prev) => ({
+      ...prev,
+      isMaximized: !prev.isMaximized
+    }));
     onMaximize?.();
   };
 
@@ -114,20 +162,25 @@ export function Window({
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
+      onClick={handleWindowClick}
       className={cn(
-        "fixed z-[49] flex flex-col",
-        "bg-background/50 backdrop-blur-xl",
-        "border border-border/50 rounded-lg shadow-2xl",
+        "fixed flex flex-col",
+        "bg-background/40 backdrop-blur-xl",
+        "border rounded-lg shadow-2xl",
         "overflow-hidden",
-        "user-select-none",
-        isMaximized && "!top-0 !left-0 rounded-none",
+        "user-select-none transition-all",
+        windowState.isMaximized && "!top-0 !left-0 rounded-none",
+        isFocused ? "border-blue-500/10" : "border-border/50",
         className
       )}
       style={{
-        left: isMaximized ? 0 : position.x,
-        top: isMaximized ? 0 : position.y,
-        width: isMaximized ? "100vw" : size.width,
-        height: isMaximized ? `calc(100vh - ${TASKBAR_HEIGHT}px)` : size.height
+        zIndex,
+        left: windowState.isMaximized ? 0 : windowState.position.x,
+        top: windowState.isMaximized ? 0 : windowState.position.y,
+        width: windowState.isMaximized ? "100vw" : windowState.size.width,
+        height: windowState.isMaximized
+          ? `calc(100vh - ${TASKBAR_HEIGHT}px)`
+          : windowState.size.height
       }}
     >
       {/* Title Bar */}
@@ -135,7 +188,8 @@ export function Window({
         className={cn(
           "flex items-center h-8 pl-4 pr-1 py-2",
           "bg-background/50 border-b border-border/30",
-          "cursor-move select-none"
+          "cursor-move select-none",
+          isFocused ? "bg-black/50" : ""
         )}
         onMouseDown={handleMouseDown}
         onDoubleClick={handleDoubleClick}
@@ -164,7 +218,7 @@ export function Window({
               className="h-6 w-8 p-0 rounded-none hover:bg-foreground/20! transition-colors delay-0 duration-75"
               onClick={handleMaximize}
             >
-              {isMaximized ? (
+              {windowState.isMaximized ? (
                 <VscChromeRestore className="size-3" />
               ) : (
                 <VscChromeMaximize className="size-3" />

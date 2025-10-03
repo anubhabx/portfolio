@@ -20,7 +20,7 @@ import { Button } from "@workspace/ui/components/button";
 import { useWindowManager } from "./WindowManager";
 import { useDesktop } from "@/contexts/DesktopContext";
 import { useTaskbar } from "@/contexts/TaskbarContext";
-import { getAppMetadata, launchApp } from "@/lib/app-registry";
+import { getAppMetadata, launchApp, getAppIcon } from "@/lib/app-registry";
 import type { DesktopItem } from "@/types";
 
 export interface DesktopProps {
@@ -76,7 +76,7 @@ export function Desktop({ gridSize = 80, padding = 16 }: DesktopProps) {
           <div
             className={cn(
               "relative w-full h-full min-h-screen",
-              "pb-20", // Space for taskbar
+              "pb-20",
               "overflow-hidden cursor-default select-none"
             )}
             onClick={handleDesktopClick}
@@ -85,12 +85,11 @@ export function Desktop({ gridSize = 80, padding = 16 }: DesktopProps) {
           >
             {/* Desktop items */}
             {items.map((item) => {
-              const metadata = getAppMetadata(item.id);
               return (
                 <DesktopIcon
                   key={item.id}
                   item={item}
-                  icon={metadata?.icon}
+                  icon={getAppIcon(item.id, "size-10")}
                   gridSize={gridSize}
                   padding={padding}
                   selected={selectedItems.has(item.id)}
@@ -177,11 +176,11 @@ const DesktopIcon = React.memo(
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <div className="flex items-center justify-center mb-1">
+                <div className="flex items-center justify-center mb-1 size-8">
                   {icon}
                 </div>
                 <span
-                  className="text-xs text-center leading-tight max-w-full truncate px-1 py-0.5 rounded bg-black/30 backdrop-blur-sm"
+                  className="text-xs text-center leading-tight max-w-full truncate px-1 py-0.5 rounded backdrop-blur-sm"
                   style={{ textShadow: "0 1px 2px rgba(0,0,0,0.8)" }}
                 >
                   {item.name}

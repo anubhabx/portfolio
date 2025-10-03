@@ -15,6 +15,11 @@ import Window from "@/components/Window";
 export type ResumeWindowProps = {
   isOpen: boolean;
   onClose: () => void;
+  onMinimize?: () => void;
+  onFocus?: () => void;
+  windowId?: string;
+  zIndex?: number;
+  isFocused?: boolean;
 };
 
 const experience = [
@@ -63,7 +68,15 @@ const education = [
   }
 ];
 
-export function ResumeWindow({ isOpen, onClose }: ResumeWindowProps) {
+export function ResumeWindow({ 
+  isOpen, 
+  onClose,
+  onMinimize,
+  onFocus,
+  windowId,
+  zIndex,
+  isFocused
+}: ResumeWindowProps) {
   const handleDownload = () => {
     // Simulate PDF download
     const link = document.createElement("a");
@@ -78,6 +91,11 @@ export function ResumeWindow({ isOpen, onClose }: ResumeWindowProps) {
       icon={<FileText className="size-4" />}
       isOpen={isOpen}
       onClose={onClose}
+      onMinimize={onMinimize}
+      onFocus={onFocus}
+      windowId={windowId}
+      zIndex={zIndex}
+      isFocused={isFocused}
       className="min-w-[700px] min-h-[600px]"
     >
       <div className="p-6 space-y-6 overflow-auto h-full">

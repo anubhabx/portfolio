@@ -17,20 +17,45 @@ import {
   Folder,
   Download
 } from "lucide-react";
-import { ExplorerIcon } from "@/components/Icons";
+import { ExplorerIcon, FolderIcon } from "@/components/Icons";
 import Window from "@/components/Window";
 import { type FileSystemItem } from "@/types";
-import { getThisPCItems, getDesktopFolderItems } from "@/data/applications";
+import { APP_REGISTRY } from "@/lib/app-registry";
 
 export type FileExplorerProps = {
   isOpen: boolean;
   onClose: () => void;
+  onMinimize?: () => void;
+  onFocus?: () => void;
+  windowId?: string;
+  zIndex?: number;
+  isFocused?: boolean;
   initialPath?: string;
+};
+
+// Helper to get This PC items
+const getThisPCItems = (): FileSystemItem[] => {
+  return ["documents", "downloads", "desktop-folder"].map((id) => {
+    const app = APP_REGISTRY[id];
+    return {
+      id,
+      name: app?.name || id,
+      type: "folder" as const,
+      icon: app?.icon || <FolderIcon className="size-6" />,
+      path: `/${app?.name || id}`,
+      dateModified: new Date(2024, 0, 15)
+    };
+  });
 };
 
 export function FileExplorer({
   isOpen,
   onClose,
+  onMinimize,
+  onFocus,
+  windowId,
+  zIndex,
+  isFocused,
   initialPath = "This PC"
 }: FileExplorerProps) {
   const [currentPath, setCurrentPath] = React.useState(initialPath);
@@ -134,6 +159,11 @@ export function FileExplorer({
       icon={<ExplorerIcon className="size-4" />}
       isOpen={isOpen}
       onClose={onClose}
+      onMinimize={onMinimize}
+      onFocus={onFocus}
+      windowId={windowId}
+      zIndex={zIndex}
+      isFocused={isFocused}
       className="min-w-[800px] min-h-[500px]"
     >
       <div className="flex flex-col h-full">
@@ -182,7 +212,7 @@ export function FileExplorer({
               <Search className="size-4 text-muted-foreground" />
               <Input
                 placeholder="Search"
-                className="border-none bg-transparent px-0 py-0 h-auto focus-visible:ring-0 text-sm"
+                className="border-none bg-transparent! px-0 py-0 h-auto focus-visible:ring-0 text-sm"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />

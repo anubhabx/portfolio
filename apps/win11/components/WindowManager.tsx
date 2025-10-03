@@ -29,23 +29,51 @@ export function WindowManagerProvider({
   children: React.ReactNode;
 }) {
   const [windows, setWindows] = React.useState<OpenWindow[]>([]);
+  const [focusedWindowId, setFocusedWindowId] = React.useState<string | null>(
+    null
+  );
 
   const openWindow = React.useCallback((window: Omit<OpenWindow, "id">) => {
     const id = Math.random().toString(36).substr(2, 9);
-    setWindows((prev) => [...prev, { ...window, id }]);
+    const newWindow = { ...window, id, isMinimized: false };
+    setWindows((prev) => [...prev, newWindow]);
+    setFocusedWindowId(id);
   }, []);
 
   const closeWindow = React.useCallback((id: string) => {
     setWindows((prev) => prev.filter((w) => w.id !== id));
+    setFocusedWindowId((current) => (current === id ? null : current));
   }, []);
 
   const focusWindow = React.useCallback((id: string) => {
-    setWindows((prev) => {
-      const window = prev.find((w) => w.id === id);
-      if (!window) return prev;
-      return [window, ...prev.filter((w) => w.id !== id)];
-    });
+    setFocusedWindowId(id);
+    // Restore if minimized
+    setWindows((prev) =>
+      prev.map((w) => (w.id === id ? { ...w, isMinimized: false } : w))
+    );
   }, []);
+
+  const minimizeWindow = React.useCallback((id: string) => {
+    setWindows((prev) =>
+      prev.map((w) => (w.id === id ? { ...w, isMinimized: true } : w))
+    );
+    setFocusedWindowId((current) => (current === id ? null : current));
+  }, []);
+
+  const restoreWindow = React.useCallback((id: string) => {
+    setWindows((prev) =>
+      prev.map((w) => (w.id === id ? { ...w, isMinimized: false } : w))
+    );
+    setFocusedWindowId(id);
+  }, []);
+
+  const getWindowZIndex = React.useCallback(
+    (windowId: string) => {
+      if (windowId === focusedWindowId) return 50;
+      return 49;
+    },
+    [focusedWindowId]
+  );
 
   return (
     <WindowManagerContext.Provider
@@ -53,47 +81,45 @@ export function WindowManagerProvider({
         windows,
         openWindow,
         closeWindow,
-        focusWindow
+        focusWindow,
+        minimizeWindow,
+        restoreWindow
       }}
     >
       {children}
 
       <AnimatePresence>
         {windows.map((window) => {
+          if (window.isMinimized) return null; // Don't render minimized windows
+
+          const zIndex = getWindowZIndex(window.id);
+          const isFocused = window.id === focusedWindowId;
+
+          const commonProps = {
+            isOpen: true,
+            onClose: () => closeWindow(window.id),
+            onMinimize: () => minimizeWindow(window.id),
+            onFocus: () => focusWindow(window.id),
+            windowId: `${window.type}-${window.id}`,
+            zIndex,
+            isFocused
+          };
+
           switch (window.type) {
             case "file-explorer":
               return (
                 <FileExplorer
                   key={window.id}
-                  isOpen={true}
-                  onClose={() => closeWindow(window.id)}
+                  {...commonProps}
                   {...window.props}
                 />
               );
             case "about-me":
-              return (
-                <AboutWindow
-                  key={window.id}
-                  isOpen={true}
-                  onClose={() => closeWindow(window.id)}
-                />
-              );
+              return <AboutWindow key={window.id} {...commonProps} />;
             case "my-projects":
-              return (
-                <ProjectsWindow
-                  key={window.id}
-                  isOpen={true}
-                  onClose={() => closeWindow(window.id)}
-                />
-              );
+              return <ProjectsWindow key={window.id} {...commonProps} />;
             case "resume":
-              return (
-                <ResumeWindow
-                  key={window.id}
-                  isOpen={true}
-                  onClose={() => closeWindow(window.id)}
-                />
-              );
+              return <ResumeWindow key={window.id} {...commonProps} />;
             default:
               return null;
           }
