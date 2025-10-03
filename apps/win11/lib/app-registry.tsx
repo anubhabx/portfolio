@@ -6,9 +6,9 @@ import {
   WindowsUserFolderIcon,
   ProgramFolderIcon,
   PDFIcon,
-  FolderIcon
+  FolderIcon,
+  MailIcon
 } from "@/components/Icons";
-import { Mail } from "lucide-react";
 import type { WindowType } from "@/types";
 
 /**
@@ -66,7 +66,7 @@ export const APP_REGISTRY: Record<string, AppMetadata> = {
   contact: {
     id: "contact",
     name: "Contact",
-    icon: <Mail />,
+    icon: <MailIcon />,
     windowType: "contact",
     description: "Get in touch with me"
   },
@@ -117,8 +117,20 @@ export function getAppIcon(id: string, className?: string): React.ReactNode {
   const app = APP_REGISTRY[id];
   if (!app || !app.icon) return null;
 
-  // Clone the icon element and add className
-  return React.cloneElement(app.icon as React.ReactElement, { className });
+  // If no className is provided, return the icon as-is
+  if (!className) return app.icon;
+
+  // Check if the icon is a valid React element that can accept className
+  if (React.isValidElement(app.icon)) {
+    return React.cloneElement(
+      app.icon as React.ReactElement<{ className?: string }>,
+      {
+        className
+      }
+    );
+  }
+
+  return app.icon;
 }
 
 /**

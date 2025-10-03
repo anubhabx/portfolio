@@ -48,6 +48,12 @@ const getThisPCItems = (): FileSystemItem[] => {
   });
 };
 
+// Helper to get Desktop folder items
+const getDesktopFolderItems = (): FileSystemItem[] => {
+  // Return empty array or add desktop-specific items here
+  return [];
+};
+
 export function FileExplorer({
   isOpen,
   onClose,
