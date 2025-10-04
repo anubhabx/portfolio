@@ -96,36 +96,36 @@ export function ContactWindow({
               <div className="flex items-center gap-3">
                 <Mail className="size-4 text-muted-foreground" />
                 <a
-                  href="mailto:john.doe@example.com"
+                  href="mailto:anubhabxdev@gmail.com"
                   className="text-sm hover:underline"
                 >
-                  john.doe@example.com
+                  anubhabxdev@gmail.com
                 </a>
               </div>
               <div className="flex items-center gap-3">
                 <MapPin className="size-4 text-muted-foreground" />
-                <span className="text-sm">San Francisco, CA</span>
+                <span className="text-sm">India</span>
               </div>
               <div className="flex items-center gap-3">
                 <Github className="size-4 text-muted-foreground" />
                 <a
-                  href="https://github.com/johndoe"
+                  href="https://github.com/anubhabx"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm hover:underline"
                 >
-                  github.com/johndoe
+                  github.com/anubhabx
                 </a>
               </div>
               <div className="flex items-center gap-3">
                 <Linkedin className="size-4 text-muted-foreground" />
                 <a
-                  href="https://linkedin.com/in/johndoe"
+                  href="https://linkedin.com/in/anubhabx"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm hover:underline"
                 >
-                  linkedin.com/in/johndoe
+                  linkedin.com/in/anubhabx
                 </a>
               </div>
             </div>

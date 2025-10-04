@@ -1,0 +1,186 @@
+{
+  "personalInfo": {
+    "name": "Anubhab Debnath",
+    "title": "Full Stack Web Developer & UI Designer",
+    "location": "Kanchrapara, West Bengal",
+    "email": "anubhabdebnath98@gmail.com",
+    "phone": "+91 8697162979",
+    "links": {
+      "github": "https://github.com/anubhabx",
+      "linkedin": "https://www.linkedin.com/in/anubhabx",
+      "portfolio": "https://anubhabx.dev"
+    }
+  },
+  "summary": "Full-Stack Web Developer and UI Designer passionate about building scalable, user-centric applications. Experienced in React, TypeScript, and cloud deployment with AWS. Adept at collaborating in agile teams, mentoring peers, and delivering high-impact UI experiences. Seeking opportunities to contribute to innovative software solutions and grow with like-minded teams.",
+  "education": [
+    {
+      "degree": "Bachelor of Technology in Computer Science and Engineering",
+      "institution": "Adamas University",
+      "location": "West Bengal, India",
+      "period": "2022-2026"
+    },
+    {
+      "degree": "Higher Secondary (90%)",
+      "institution": "Kanchrapara Harnett English Medium School",
+      "location": "West Bengal, India",
+      "period": "2020-2022",
+      "stream": "CBSE"
+    },
+    {
+      "degree": "Secondary (88%)",
+      "institution": "Kanchrapara Harnett English Medium School",
+      "location": "West Bengal, India",
+      "period": "2020",
+      "stream": "CBSE"
+    }
+  ],
+  "experience": [
+    {
+      "company": "Blanc Technologies",
+      "position": "UI Designer Intern",
+      "location": "Remote",
+      "period": "April 2023 - March 2024",
+      "description": [
+        "Contributed to the development of Agrishop, enhancing UI/UX on both web and mobile platforms.",
+        "Collaborated with senior designers and developers to build scalable UI components, reducing turnaround time by 15%.",
+        "Mentored junior UI and graphic designers, fostering design consistency and improved team efficiency by 35%."
+      ]
+    },
+    {
+      "company": "Freelance & Open Source",
+      "position": "Full Stack Developer",
+      "location": "Remote",
+      "period": "2022 - Present",
+      "description": [
+        "Developed custom web applications for clients using React and Next.js.",
+        "Built robust backend systems with Node.js/Express and MongoDB/PostgreSQL.",
+        "Contributed to and maintained open-source projects on GitHub."
+      ]
+    }
+  ],
+  "skills": {
+    "frontend": ["React.js", "Next.js", "TypeScript", "Tailwind CSS"],
+    "backend": ["Node.js", "Express.js"],
+    "database": ["MongoDB", "PostgreSQL"],
+    "devops": ["Docker", "AWS S3", "CloudFront", "Firebase"],
+    "tools": ["Git", "GitHub", "WebSockets", "Figma"]
+  },
+  "projects": [
+    {
+      "name": "Status Deck",
+      "description": "Live status dashboard for developer projects and uptime monitoring.",
+      "technologies": ["TypeScript", "Appwrite", "Vercel", "Render"],
+      "highlights": [
+        "Built public dashboard with scheduled uptime checks",
+        "Uses Appwrite functions and automation for real-time status updates",
+        "Features recent activity and live project health indicators"
+      ],
+      "url": "https://status-deck.appwrite.network/",
+      "github": "https://github.com/anubhabx/status-deck"
+    },
+    {
+      "name": "Learning Management System",
+      "description": "Modern LMS platform for educators and students, with payment, authentication, and robust course management.",
+      "technologies": [
+        "TypeScript",
+        "MongoDB",
+        "AWS S3",
+        "Clerk",
+        "Stripe",
+        "Vercel",
+        "Docker"
+      ],
+      "highlights": [
+        "Supports secure authentication with Clerk",
+        "Integrated Stripe payments for premium courses",
+        "AWS-powered media handling and cloud storage",
+        "Multi-role dashboards for teachers and students"
+      ],
+      "url": "https://learning-management-system-one-theta.vercel.app/",
+      "github": "https://github.com/anubhabx/learning-management-system"
+    },
+    {
+      "name": "ImagineAI",
+      "description": "Fullstack AI-powered web app (Next.js) for generating, managing, and showcasing creative content.",
+      "technologies": ["MongoDB", "Next.js", "TypeScript", "Vercel"],
+      "highlights": [
+        "Optimized frontend using Next.js and custom fonts",
+        "Demonstrates experience with database-driven applications",
+        "Built for scalable deployment on Vercel"
+      ],
+      "url": "https://imagine-ai-umber.vercel.app/",
+      "github": "https://github.com/anubhabx/ImagineAI"
+    },
+    {
+      "name": "Codecrafters Git (TypeScript)",
+      "description": "Challenge solution: build your own Git from scratch for CodeCrafters.io.",
+      "technologies": ["TypeScript", "JavaScript", "Shell"],
+      "highlights": [
+        "Implements repository initialization, commits, and clone operations",
+        "Deep dive into Git internals—objects, protocols, and low-level commands"
+      ],
+      "github": "https://github.com/anubhabx/codecrafters-git-typescript"
+    },
+    {
+      "name": "Codecrafters DNS Server (TypeScript)",
+      "description": "Challenge solution: build your own DNS server, learning core protocol fundamentals.",
+      "technologies": ["TypeScript", "Shell"],
+      "highlights": [
+        "Supports parsing and creating DNS packets, handling records and recursive resolves",
+        "Hands-on experience with networking and protocols"
+      ],
+      "github": "https://github.com/anubhabx/codecrafters-dns-server-typescript"
+    },
+    {
+      "name": "InkWell (MERN Blog Platform)",
+      "description": "Full-Stack MERN blog application for publishing, managing posts and user engagement.",
+      "technologies": [
+        "MongoDB",
+        "Express.js",
+        "React.js",
+        "Node.js",
+        "Tailwind CSS"
+      ],
+      "highlights": [
+        "User authentication, profile, and social features",
+        "Responsive dashboard and comment system",
+        "Hosted live on Render"
+      ],
+      "url": "https://inkwell-l684.onrender.com/",
+      "github": "https://github.com/anubhabx/inkwell"
+    },
+    {
+      "name": "Windows 11 Portfolio",
+      "description": "Personal portfolio website styled as Windows 11 desktop interface.",
+      "technologies": [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "Framer Motion",
+        "Turborepo"
+      ],
+      "highlights": [
+        "Monorepo architecture and dynamic content loading",
+        "Features draggable/resizable windows, animated interactions",
+        "Content powered by GitHub API"
+      ],
+      "url": "https://anubhabx.me",
+      "github": "https://github.com/anubhabx/portfolio"
+    }
+  ],
+  "languages": [
+    {
+      "language": "English",
+      "proficiency": "Professional Working Proficiency"
+    },
+    {
+      "language": "Bengali",
+      "proficiency": "Native"
+    },
+    {
+      "language": "Hindi",
+      "proficiency": "Professional Working Proficiency"
+    }
+  ]
+}

@@ -114,11 +114,11 @@ function getDefaultDesktopItems(): DesktopItem[] {
       }
     },
     {
-      id: "about-me",
-      name: "About Me",
+      id: "resume",
+      name: "Resume / CV",
       type: "portfolio",
       position: { x: 0, y: 1 },
-      windowType: "about-me",
+      windowType: "resume",
       metadata: {
         dateModified: new Date(2024, 0, 1)
       }
@@ -134,20 +134,10 @@ function getDefaultDesktopItems(): DesktopItem[] {
       }
     },
     {
-      id: "resume",
-      name: "Resume",
-      type: "portfolio",
-      position: { x: 0, y: 3 },
-      windowType: "resume",
-      metadata: {
-        dateModified: new Date(2024, 0, 1)
-      }
-    },
-    {
       id: "contact",
       name: "Contact",
       type: "portfolio",
-      position: { x: 1, y: 0 },
+      position: { x: 0, y: 3 },
       windowType: "contact",
       metadata: {
         dateModified: new Date(2024, 0, 1)
@@ -157,7 +147,7 @@ function getDefaultDesktopItems(): DesktopItem[] {
       id: "chrome",
       name: "Google Chrome",
       type: "app",
-      position: { x: 1, y: 1 },
+      position: { x: 1, y: 0 },
       metadata: {
         dateModified: new Date(2024, 0, 1)
       }

@@ -11,6 +11,7 @@ import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Separator } from "@workspace/ui/components/separator";
+import { Skeleton } from "@workspace/ui/components/skeleton";
 import {
   ExternalLink,
   FolderOpen,
@@ -18,11 +19,14 @@ import {
   List,
   Star,
   Calendar,
-  Filter
+  Filter,
+  RefreshCw,
+  GitFork
 } from "lucide-react";
 import { FaGithub as Github } from "react-icons/fa";
 import { cn } from "@workspace/ui/lib/utils";
 import Window from "@/components/Window";
+import { useGitHubProjects } from "@/hooks/use-github";
 
 export type ProjectsWindowProps = {
   isOpen: boolean;
@@ -34,58 +38,8 @@ export type ProjectsWindowProps = {
   isFocused?: boolean;
 };
 
-const projects = [
-  {
-    id: "ecommerce",
-    title: "E-Commerce Platform",
-    description:
-      "A full-stack e-commerce solution with React, Node.js, and Stripe integration.",
-    image: "/api/placeholder/300/200",
-    tags: ["React", "Node.js", "PostgreSQL", "Stripe"],
-    category: "web",
-    github: "https://github.com/johndoe/ecommerce",
-    demo: "https://ecommerce-demo.com",
-    featured: true,
-    year: 2024
-  },
-  {
-    id: "mobile-app",
-    title: "Fitness Tracker App",
-    description: "React Native mobile app for tracking workouts and nutrition.",
-    image: "/api/placeholder/300/200",
-    tags: ["React Native", "TypeScript", "Firebase"],
-    category: "mobile",
-    github: "https://github.com/johndoe/fitness-tracker",
-    demo: "https://apps.apple.com/fitness-tracker",
-    featured: true,
-    year: 2024
-  },
-  {
-    id: "dashboard",
-    title: "Analytics Dashboard",
-    description:
-      "Real-time analytics dashboard with interactive charts and data visualization.",
-    image: "/api/placeholder/300/200",
-    tags: ["Next.js", "D3.js", "Tailwind CSS"],
-    category: "web",
-    github: "https://github.com/johndoe/analytics-dashboard",
-    demo: "https://analytics-demo.com",
-    featured: false,
-    year: 2023
-  },
-  {
-    id: "cli-tool",
-    title: "Developer CLI Tool",
-    description: "Command-line tool for automating development workflows.",
-    image: "/api/placeholder/300/200",
-    tags: ["Node.js", "TypeScript", "Commander.js"],
-    category: "tools",
-    github: "https://github.com/johndoe/dev-cli",
-    demo: "https://npmjs.com/package/dev-cli",
-    featured: false,
-    year: 2023
-  }
-];
+// Replace with your GitHub username
+const GITHUB_USERNAME = "anubhabx";
 
 export function ProjectsWindow({
   isOpen,
@@ -96,20 +50,26 @@ export function ProjectsWindow({
   zIndex,
   isFocused
 }: ProjectsWindowProps) {
+  const { projects, isLoading, error, refetch, lastUpdated } =
+    useGitHubProjects({
+      username: GITHUB_USERNAME,
+      refreshInterval: 5 * 60 * 1000 // 5 minutes
+    });
+
   const [viewMode, setViewMode] = React.useState<"grid" | "list">("grid");
   const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState<string>("all");
   const [showFilters, setShowFilters] = React.useState(false);
 
-  // Get all unique tags
+  // Get all unique tags from projects
   const allTags = React.useMemo(() => {
     const tags = new Set<string>();
     projects.forEach((project) => {
       project.tags.forEach((tag) => tags.add(tag));
     });
     return Array.from(tags).sort();
-  }, []);
+  }, [projects]);
 
   // Filter projects
   const filteredProjects = React.useMemo(() => {
@@ -141,7 +101,7 @@ export function ProjectsWindow({
     }
 
     return filtered;
-  }, [selectedCategory, searchQuery, selectedTags]);
+  }, [projects, selectedCategory, searchQuery, selectedTags]);
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
@@ -155,29 +115,32 @@ export function ProjectsWindow({
     setSelectedCategory("all");
   };
 
-  const categories = [
-    { id: "all", label: "All Projects", count: projects.length },
-    {
-      id: "featured",
-      label: "Featured",
-      count: projects.filter((p) => p.featured).length
-    },
-    {
-      id: "web",
-      label: "Web Apps",
-      count: projects.filter((p) => p.category === "web").length
-    },
-    {
-      id: "mobile",
-      label: "Mobile",
-      count: projects.filter((p) => p.category === "mobile").length
-    },
-    {
-      id: "tools",
-      label: "Tools",
-      count: projects.filter((p) => p.category === "tools").length
-    }
-  ];
+  const categories = React.useMemo(
+    () => [
+      { id: "all", label: "All Projects", count: projects.length },
+      {
+        id: "featured",
+        label: "Featured",
+        count: projects.filter((p) => p.featured).length
+      },
+      {
+        id: "web",
+        label: "Web Apps",
+        count: projects.filter((p) => p.category === "web").length
+      },
+      {
+        id: "mobile",
+        label: "Mobile",
+        count: projects.filter((p) => p.category === "mobile").length
+      },
+      {
+        id: "tools",
+        label: "Tools",
+        count: projects.filter((p) => p.category === "tools").length
+      }
+    ],
+    [projects]
+  );
 
   return (
     <Window
@@ -200,7 +163,7 @@ export function ProjectsWindow({
               placeholder="Search projects..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="border-none bg-transparent! px-0 py-0 h-auto focus-visible:ring-0 text-sm"
+              className="border-none bg-transparent px-0 py-0 h-auto focus-visible:ring-0 text-sm"
             />
           </div>
 
@@ -234,6 +197,17 @@ export function ProjectsWindow({
           )}
 
           <div className="flex-1" />
+
+          {/* Refresh Button */}
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-8 px-3 gap-2"
+            onClick={() => refetch()}
+            disabled={isLoading}
+          >
+            <RefreshCw className={cn("size-4", isLoading && "animate-spin")} />
+          </Button>
 
           <Button
             size="sm"
@@ -304,18 +278,12 @@ export function ProjectsWindow({
 
           {/* Main Content */}
           <div className="flex-1 overflow-auto">
-            {filteredProjects.length === 0 ? (
-              <div className="flex items-center justify-center h-full">
-                <div className="text-center space-y-2">
-                  <FolderOpen className="size-12 mx-auto text-muted-foreground/50" />
-                  <p className="text-muted-foreground">
-                    No projects found matching your filters
-                  </p>
-                  <Button variant="outline" size="sm" onClick={clearFilters}>
-                    Clear filters
-                  </Button>
-                </div>
-              </div>
+            {isLoading ? (
+              <LoadingSkeleton viewMode={viewMode} />
+            ) : error ? (
+              <ErrorState error={error} onRetry={refetch} />
+            ) : filteredProjects.length === 0 ? (
+              <EmptyState onClearFilters={clearFilters} />
             ) : viewMode === "grid" ? (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-4">
                 {filteredProjects.map((project) => (
@@ -329,6 +297,7 @@ export function ProjectsWindow({
                   <div className="flex-1">Name</div>
                   <div className="w-40">Category</div>
                   <div className="w-32">Year</div>
+                  <div className="w-32">Stats</div>
                   <div className="w-32">Actions</div>
                 </div>
 
@@ -346,11 +315,8 @@ export function ProjectsWindow({
         {/* Status Bar */}
         <div className="flex items-center justify-between px-4 py-2 text-xs text-muted-foreground border-t border-white/10 bg-background/20">
           <span>{filteredProjects.length} items</span>
-          {selectedTags.length > 0 && (
-            <span>
-              {selectedTags.length} filter{selectedTags.length !== 1 ? "s" : ""}{" "}
-              active
-            </span>
+          {lastUpdated && (
+            <span>Last updated: {lastUpdated.toLocaleTimeString()}</span>
           )}
         </div>
       </div>
@@ -358,8 +324,10 @@ export function ProjectsWindow({
   );
 }
 
+// ... ProjectGridCard and ProjectListItem components (update to use new project type)
+
 type ProjectGridCardProps = {
-  project: (typeof projects)[0];
+  project: ReturnType<typeof useGitHubProjects>["projects"][0];
 };
 
 function ProjectGridCard({ project }: ProjectGridCardProps) {
@@ -398,6 +366,17 @@ function ProjectGridCard({ project }: ProjectGridCardProps) {
           )}
         </div>
 
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+          <div className="flex items-center gap-1">
+            <Star className="size-3" />
+            {project.stars}
+          </div>
+          <div className="flex items-center gap-1">
+            <GitFork className="size-3" />
+            {project.forks}
+          </div>
+        </div>
+
         <div className="flex gap-2">
           <Button
             size="sm"
@@ -410,12 +389,14 @@ function ProjectGridCard({ project }: ProjectGridCardProps) {
               Code
             </a>
           </Button>
-          <Button size="sm" className="flex-1 h-7 text-xs" asChild>
-            <a href={project.demo} target="_blank" rel="noopener noreferrer">
-              <ExternalLink className="size-3 mr-1" />
-              Demo
-            </a>
-          </Button>
+          {project.demo && (
+            <Button size="sm" className="flex-1 h-7 text-xs" asChild>
+              <a href={project.demo} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="size-3 mr-1" />
+                Demo
+              </a>
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>
@@ -423,7 +404,7 @@ function ProjectGridCard({ project }: ProjectGridCardProps) {
 }
 
 type ProjectListItemProps = {
-  project: (typeof projects)[0];
+  project: ReturnType<typeof useGitHubProjects>["projects"][0];
 };
 
 function ProjectListItem({ project }: ProjectListItemProps) {
@@ -454,16 +435,84 @@ function ProjectListItem({ project }: ProjectListItemProps) {
         <Calendar className="size-3" />
         {project.year}
       </div>
+      <div className="w-32 flex items-center gap-3 text-xs text-muted-foreground">
+        <div className="flex items-center gap-1">
+          <Star className="size-3" />
+          {project.stars}
+        </div>
+        <div className="flex items-center gap-1">
+          <GitFork className="size-3" />
+          {project.forks}
+        </div>
+      </div>
       <div className="w-32 flex gap-1">
         <Button size="sm" variant="ghost" className="h-7 px-2" asChild>
           <a href={project.github} target="_blank" rel="noopener noreferrer">
             <Github className="size-3" />
           </a>
         </Button>
-        <Button size="sm" variant="ghost" className="h-7 px-2" asChild>
-          <a href={project.demo} target="_blank" rel="noopener noreferrer">
-            <ExternalLink className="size-3" />
-          </a>
+        {project.demo && (
+          <Button size="sm" variant="ghost" className="h-7 px-2" asChild>
+            <a href={project.demo} target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="size-3" />
+            </a>
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function LoadingSkeleton({ viewMode }: { viewMode: "grid" | "list" }) {
+  if (viewMode === "grid") {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 p-4">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Card key={i}>
+            <Skeleton className="h-32" />
+            <CardHeader>
+              <Skeleton className="h-4 w-3/4" />
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-3 w-2/3" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-2 space-y-2">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <Skeleton key={i} className="h-12 w-full" />
+      ))}
+    </div>
+  );
+}
+
+function ErrorState({ error, onRetry }: { error: Error; onRetry: () => void }) {
+  return (
+    <div className="flex items-center justify-center h-full">
+      <div className="text-center space-y-4">
+        <p className="text-destructive">{error.message}</p>
+        <Button onClick={onRetry}>Retry</Button>
+      </div>
+    </div>
+  );
+}
+
+function EmptyState({ onClearFilters }: { onClearFilters: () => void }) {
+  return (
+    <div className="flex items-center justify-center h-full">
+      <div className="text-center space-y-2">
+        <FolderOpen className="size-12 mx-auto text-muted-foreground/50" />
+        <p className="text-muted-foreground">
+          No projects found matching your filters
+        </p>
+        <Button variant="outline" size="sm" onClick={onClearFilters}>
+          Clear filters
         </Button>
       </div>
     </div>

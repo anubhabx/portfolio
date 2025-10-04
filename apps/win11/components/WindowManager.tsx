@@ -6,7 +6,6 @@ import type { OpenWindow, WindowManagerContextType } from "../types";
 
 // Import window components
 import FileExplorer from "./FileExplorer";
-import AboutWindow from "@/components/AboutWindow";
 import ProjectsWindow from "@/components/ProjectsWindow";
 import ResumeWindow from "@/components/ResumeWindow";
 import ContactWindow from "@/components/ContactWindow";
@@ -109,8 +108,6 @@ export function WindowManagerProvider({
                   {...window.props}
                 />
               );
-            case "about-me":
-              return <AboutWindow key={window.id} {...commonProps} />;
             case "my-projects":
               return <ProjectsWindow key={window.id} {...commonProps} />;
             case "resume":

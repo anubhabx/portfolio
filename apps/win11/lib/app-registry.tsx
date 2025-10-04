@@ -42,13 +42,6 @@ export const APP_REGISTRY: Record<string, AppMetadata> = {
     windowType: "file-explorer",
     description: "Access your computer's drives and folders"
   },
-  "about-me": {
-    id: "about-me",
-    name: "About Me",
-    icon: <WindowsUserFolderIcon />,
-    windowType: "about-me",
-    description: "Learn more about me"
-  },
   "my-projects": {
     id: "my-projects",
     name: "My Projects",
@@ -58,10 +51,10 @@ export const APP_REGISTRY: Record<string, AppMetadata> = {
   },
   resume: {
     id: "resume",
-    name: "Resume",
+    name: "Resume / CV",
     icon: <PDFIcon />,
     windowType: "resume",
-    description: "View my resume and experience"
+    description: "View my professional resume, experience, education, and projects"
   },
   contact: {
     id: "contact",

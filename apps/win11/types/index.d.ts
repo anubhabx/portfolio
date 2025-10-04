@@ -12,7 +12,6 @@ export type ApplicationType =
 // Window Types - these are the actual window components that can be opened
 export type WindowType =
   | "file-explorer"
-  | "about-me"
   | "my-projects"
   | "resume"
   | "contact"
