@@ -68,8 +68,8 @@ const education = [
   }
 ];
 
-export function ResumeWindow({ 
-  isOpen, 
+export function ResumeWindow({
+  isOpen,
   onClose,
   onMinimize,
   onFocus,
@@ -78,11 +78,21 @@ export function ResumeWindow({
   isFocused
 }: ResumeWindowProps) {
   const handleDownload = () => {
-    // Simulate PDF download
+    // Create a simple PDF-like content (or link to actual PDF)
+    // Option 1: If you have a PDF file in public folder
     const link = document.createElement("a");
-    link.href = "/resume.pdf";
+    link.href = "/resume.pdf"; // Make sure this file exists in public/
     link.download = "John_Doe_Resume.pdf";
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
+
+    // Option 2: Generate PDF dynamically (requires a library like jsPDF)
+    // import jsPDF from 'jspdf';
+    // const doc = new jsPDF();
+    // doc.text("John Doe - Resume", 10, 10);
+    // // Add more content...
+    // doc.save("John_Doe_Resume.pdf");
   };
 
   return (

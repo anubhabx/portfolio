@@ -9,9 +9,16 @@ import {
 } from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
 import { Separator } from "@workspace/ui/components/separator";
-import { User, MapPin, Calendar, Mail, Globe } from "lucide-react";
+import {
+  User,
+  MapPin,
+  Mail,
+  Globe,
+  SquareArrowOutUpRightIcon
+} from "lucide-react";
 import { FaGithub as Github, FaLinkedin as Linkedin } from "react-icons/fa";
 import Window from "@/components/Window";
+import Link from "next/link";
 
 export type AboutWindowProps = {
   isOpen: boolean;
@@ -23,8 +30,8 @@ export type AboutWindowProps = {
   isFocused?: boolean;
 };
 
-export function AboutWindow({ 
-  isOpen, 
+export function AboutWindow({
+  isOpen,
   onClose,
   onMinimize,
   onFocus,
@@ -52,16 +59,14 @@ export function AboutWindow({
             JD
           </div>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold mb-2">John Doe</h1>
-            <p className="text-muted-foreground mb-3">Full Stack Developer</p>
+            <h1 className="text-2xl font-bold mb-2">Anubhab Debnath</h1>
+            <p className="text-muted-foreground mb-3">
+              UI Designer and Full Stack Developer
+            </p>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-1">
                 <MapPin className="size-4" />
-                <span>San Francisco, CA</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Calendar className="size-4" />
-                <span>5+ years experience</span>
+                <span>India</span>
               </div>
             </div>
           </div>
@@ -80,7 +85,7 @@ export function AboutWindow({
               technologies. I love creating intuitive user experiences and
               robust backend systems. When I'm not coding, you can find me
               exploring new technologies, contributing to open source projects,
-              or hiking in the mountains.
+              or playing games.
             </p>
           </CardContent>
         </Card>
@@ -142,20 +147,51 @@ export function AboutWindow({
           <CardContent>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <Mail className="size-4 text-muted-foreground" />
-                <span className="text-sm">john.doe@example.com</span>
+                <Link
+                  href={"mailto:anubhabxdev@gmail.com"}
+                  target="_blank"
+                  className="flex items-center gap-3 group"
+                >
+                  <Mail className="size-4 text-muted-foreground" />
+                  <span className="text-sm">anubhabxdev@gmail.com</span>
+                  <SquareArrowOutUpRightIcon className="size-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
               </div>
               <div className="flex items-center gap-3">
-                <Github className="size-4 text-muted-foreground" />
-                <span className="text-sm">github.com/johndoe</span>
+                <Link
+                  href={"https://www.github.com/anubhabx"}
+                  target="_blank"
+                  className="flex items-center gap-3 group"
+                >
+                  <Github className="size-4 text-muted-foreground" />
+                  <span className="text-sm">github.com/anubhabx</span>
+
+                  <SquareArrowOutUpRightIcon className="size-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
               </div>
               <div className="flex items-center gap-3">
-                <Linkedin className="size-4 text-muted-foreground" />
-                <span className="text-sm">linkedin.com/in/johndoe</span>
+                <Link
+                  href={"https://www.linkedin.com/in/anubhabx"}
+                  target="_blank"
+                  className="flex items-center gap-3 group"
+                >
+                  <Linkedin className="size-4 text-muted-foreground" />
+                  <span className="text-sm">linkedin.com/in/anubhabx</span>
+
+                  <SquareArrowOutUpRightIcon className="size-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
               </div>
               <div className="flex items-center gap-3">
-                <Globe className="size-4 text-muted-foreground" />
-                <span className="text-sm">johndoe.dev</span>
+                <Link
+                  href={"https://anubhabx.me"}
+                  target="_blank"
+                  className="flex items-center gap-3 group"
+                >
+                  <Globe className="size-4 text-muted-foreground" />
+                  <span className="text-sm">anubhabx.me</span>
+
+                  <SquareArrowOutUpRightIcon className="size-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                </Link>
               </div>
             </div>
           </CardContent>

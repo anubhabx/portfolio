@@ -53,7 +53,7 @@
 
 ### UI Polish
 
-- [ ] Real-time clock (currently updates every 30s)
+- [x] Real-time clock (currently updates every 30s)
 - [ ] Smooth animations between states
 
 ---

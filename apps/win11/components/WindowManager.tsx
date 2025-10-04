@@ -9,6 +9,7 @@ import FileExplorer from "./FileExplorer";
 import AboutWindow from "@/components/AboutWindow";
 import ProjectsWindow from "@/components/ProjectsWindow";
 import ResumeWindow from "@/components/ResumeWindow";
+import ContactWindow from "@/components/ContactWindow";
 
 const WindowManagerContext =
   React.createContext<WindowManagerContextType | null>(null);
@@ -75,34 +76,28 @@ export function WindowManagerProvider({
     [focusedWindowId]
   );
 
+  const value = {
+    windows,
+    openWindow,
+    closeWindow,
+    focusWindow,
+    minimizeWindow,
+    restoreWindow
+  };
+
   return (
-    <WindowManagerContext.Provider
-      value={{
-        windows,
-        openWindow,
-        closeWindow,
-        focusWindow,
-        minimizeWindow,
-        restoreWindow
-      }}
-    >
+    <WindowManagerContext.Provider value={value}>
       {children}
-
-      <AnimatePresence>
+      <AnimatePresence mode="popLayout">
         {windows.map((window) => {
-          if (window.isMinimized) return null; // Don't render minimized windows
-
-          const zIndex = getWindowZIndex(window.id);
-          const isFocused = window.id === focusedWindowId;
-
           const commonProps = {
             isOpen: true,
             onClose: () => closeWindow(window.id),
             onMinimize: () => minimizeWindow(window.id),
             onFocus: () => focusWindow(window.id),
             windowId: `${window.type}-${window.id}`,
-            zIndex,
-            isFocused
+            zIndex: getWindowZIndex(window.id),
+            isFocused: window.id === focusedWindowId
           };
 
           switch (window.type) {
@@ -120,6 +115,8 @@ export function WindowManagerProvider({
               return <ProjectsWindow key={window.id} {...commonProps} />;
             case "resume":
               return <ResumeWindow key={window.id} {...commonProps} />;
+            case "contact":
+              return <ContactWindow key={window.id} {...commonProps} />;
             default:
               return null;
           }
