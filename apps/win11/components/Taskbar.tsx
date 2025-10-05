@@ -65,20 +65,9 @@ export function Taskbar({ alignment = "center" }: TaskbarProps) {
     // First try to use the app's windowType directly
     // Fall back to getting from registry if not provided
     const windowType = appWindowType || getAppMetadata(appId)?.windowType;
-    if (!windowType) {
-      console.log(`[getAppWindows] ${appId}: NO windowType`);
-      return [];
-    }
-    
-    const filtered = windows.filter((w) => w.type === windowType);
-    console.log(`[getAppWindows] ${appId}:`, {
-      windowType,
-      totalWindows: windows.length,
-      matchingWindows: filtered.length,
-      allWindowTypes: windows.map(w => w.type)
-    });
-    
-    return filtered;
+    if (!windowType) return [];
+
+    return windows.filter((w) => w.type === windowType);
   };
 
   return (
@@ -111,17 +100,7 @@ export function Taskbar({ alignment = "center" }: TaskbarProps) {
               const metadata = getAppMetadata(app.id);
               const appWindows = getAppWindows(app.id, app.windowType);
               const hasOpenWindows = appWindows.length > 0;
-              const hasVisibleWindows = appWindows.some(w => !w.isMinimized);
-
-              // Temporary debug
-              console.log(`App: ${app.name}`, {
-                id: app.id,
-                appWindowType: app.windowType,
-                metadataWindowType: metadata?.windowType,
-                windowsCount: appWindows.length,
-                hasOpenWindows,
-                windows: appWindows
-              });
+              const hasVisibleWindows = appWindows.some((w) => !w.isMinimized);
 
               return (
                 <TaskbarIcon
@@ -196,7 +175,19 @@ type TaskbarIconProps = {
 };
 
 const TaskbarIcon = React.forwardRef<HTMLButtonElement, TaskbarIconProps>(
-  ({ app, icon, active, hasOpenWindows, hasVisibleWindows, isPinned, onLaunch, onUnpin }, ref) => {
+  (
+    {
+      app,
+      icon,
+      active,
+      hasOpenWindows,
+      hasVisibleWindows,
+      isPinned,
+      onLaunch,
+      onUnpin
+    },
+    ref
+  ) => {
     return (
       <ContextMenu>
         <ContextMenuTrigger asChild>
