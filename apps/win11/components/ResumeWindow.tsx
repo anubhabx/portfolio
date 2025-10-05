@@ -39,6 +39,7 @@ export type ResumeWindowProps = {
   windowId?: string;
   zIndex?: number;
   isFocused?: boolean;
+  isMinimized?: boolean;
 };
 
 export function ResumeWindow({
@@ -48,7 +49,8 @@ export function ResumeWindow({
   onFocus,
   windowId,
   zIndex,
-  isFocused
+  isFocused,
+  isMinimized
 }: ResumeWindowProps) {
   const { resume, isLoading, error, refetch } = useResume();
 
@@ -72,6 +74,7 @@ export function ResumeWindow({
       windowId={windowId}
       zIndex={zIndex}
       isFocused={isFocused}
+      isMinimized={isMinimized}
       className="min-w-[700px] min-h-[600px]"
     >
       <div className="p-6 space-y-6 overflow-auto h-full">

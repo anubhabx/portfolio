@@ -1,6 +1,47 @@
 # Portfolio Changelog
 
-## [Unreleased] - 2025-10-05
+## [Unreleased] - 2025-10-05 (Latest Update)
+
+### Added - Phase 2 Enhancements
+
+- **Terminal Command History** 
+  - Navigate previous commands with ↑/↓ arrow keys
+  - Full command history saved during session
+  - Intelligent history navigation (up to go back, down to go forward)
+
+- **Terminal Autocomplete**
+  - Press `Tab` to autocomplete commands
+  - Shows available matching commands when multiple matches exist
+  - Smart partial matching on command prefixes
+
+- **Dark/Light Mode Toggle**
+  - Theme switcher in Settings window
+  - Three modes: Dark, Light, System (follows OS preference)
+  - Persists to localStorage
+  - Real-time theme switching without page reload
+  - System theme detection with automatic updates
+
+- **Enhanced Window Animations**
+  - Smoother entry/exit animations with custom easing
+  - Hover effects on focused windows
+  - Layout transitions for resize/maximize operations
+  - Reduced motion support
+
+- **Enhanced Wallpaper Picker**
+  - 4 distinct wallpaper options (Windows Dark, Midnight Blue, Azure Sky, Purple Dream)
+  - Live preview in Settings window
+  - Improved gradient designs
+  - Active wallpaper indicator
+
+### Technical Implementation
+- **ThemeContext** - New context provider for theme management (`contexts/ThemeContext.tsx`)
+- **Framer Motion enhancements** - Advanced animation configurations in Window component
+- **Terminal improvements** - Command history state management and autocomplete logic
+- **Settings UI** - Tabbed interface for Wallpaper and Theme settings
+
+---
+
+## [Previous Update] - 2025-10-05
 
 ### Added
 - **Window Maximize on Top-Edge Drag**: Dragging a window to the top edge of the screen now maximizes it, matching Windows 11 behavior

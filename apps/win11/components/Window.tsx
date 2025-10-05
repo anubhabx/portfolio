@@ -30,6 +30,7 @@ export type WindowProps = {
   minimizable?: boolean;
   zIndex?: number;
   isFocused?: boolean;
+  isMinimized?: boolean;
   windowId?: string; // For persistence key
 };
 
@@ -65,6 +66,7 @@ export function Window({
   minimizable = true,
   zIndex = 49,
   isFocused = false,
+  isMinimized = false,
   windowId
 }: WindowProps) {
   const TASKBAR_HEIGHT = 48;
@@ -170,13 +172,46 @@ export function Window({
 
   // Handle window dragging
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (windowState.isMaximized) return;
+    // Don't start dragging if clicking on a button
+    const target = e.target as HTMLElement;
+    if (target.closest('button')) {
+      return;
+    }
+    
+    onFocus?.(); // Focus when dragging starts
+    
+    // If window is maximized, restore it to normal size on drag
+    if (windowState.isMaximized) {
+      // Calculate where the window should be positioned when restored
+      // Position it under the mouse cursor proportionally
+      const restoreWidth = initialWidth;
+      const restoreHeight = initialHeight;
+      const mouseXPercent = e.clientX / window.innerWidth;
+      
+      setWindowState((prev) => ({
+        ...prev,
+        isMaximized: false,
+        size: { width: restoreWidth, height: restoreHeight },
+        position: {
+          x: e.clientX - restoreWidth * mouseXPercent,
+          y: Math.max(0, e.clientY - 16) // 16px is half of title bar height
+        }
+      }));
+      
+      // Start dragging from the new position
+      setDragStart({
+        x: restoreWidth * mouseXPercent,
+        y: 16
+      });
+      setIsDragging(true);
+      return;
+    }
+    
     setIsDragging(true);
     setDragStart({
       x: e.clientX - windowState.position.x,
       y: e.clientY - windowState.position.y
     });
-    onFocus?.(); // Focus when dragging starts
   };
 
   const handleMouseMove = React.useCallback(
@@ -261,6 +296,9 @@ export function Window({
 
   if (!isOpen) return null;
 
+  // Don't render minimized windows (they're just in taskbar)
+  if (isMinimized) return null;
+
   return (
     <>
       {/* Snap Preview Overlay */}
@@ -268,7 +306,7 @@ export function Window({
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed z-[9999] pointer-events-none"
+          className="fixed z-[48] pointer-events-none"
           style={{
             left: snapPreview.bounds.x,
             top: snapPreview.bounds.y,
@@ -281,16 +319,32 @@ export function Window({
       )}
 
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ 
+          opacity: 1, 
+          scale: 1, 
+          y: 0,
+          transition: {
+            duration: 0.2,
+            ease: [0.4, 0, 0.2, 1]
+          }
+        }}
+        exit={{ 
+          opacity: 0, 
+          scale: 0.95, 
+          y: 10,
+          transition: {
+            duration: 0.15,
+            ease: [0.4, 0, 1, 1]
+          }
+        }}
         onClick={handleWindowClick}
         className={cn(
           "fixed flex flex-col",
           "bg-background/40 backdrop-blur-xl",
           "border rounded-lg shadow-2xl",
           "overflow-hidden",
-          "user-select-none transition-all",
+          "user-select-none",
           windowState.isMaximized && "!top-0 !left-0 rounded-none",
           isFocused ? "border-blue-500/10" : "border-border/50",
           className
@@ -303,6 +357,12 @@ export function Window({
           height: windowState.isMaximized
             ? `calc(100vh - ${TASKBAR_HEIGHT}px)`
             : windowState.size.height
+        }}
+        whileHover={{ 
+          boxShadow: isFocused ? "0 25px 50px -12px rgba(0, 0, 0, 0.5)" : undefined 
+        }}
+        transition={{
+          layout: { duration: 0.2 }
         }}
       >
       {/* Title Bar */}
@@ -327,7 +387,13 @@ export function Window({
               size="sm"
               variant="ghost"
               className="h-6 w-8 p-0 rounded-none hover:bg-foreground/20! transition-colors delay-0 duration-75"
-              onClick={onMinimize}
+              onMouseDown={(e) => {
+                e.stopPropagation(); // Prevent drag handler
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onMinimize?.();
+              }}
             >
               <VscChromeMinimize className="size-3" />
             </Button>
@@ -338,7 +404,13 @@ export function Window({
               size="sm"
               variant="ghost"
               className="h-6 w-8 p-0 rounded-none hover:bg-foreground/20! transition-colors delay-0 duration-75"
-              onClick={handleMaximize}
+              onMouseDown={(e) => {
+                e.stopPropagation(); // Prevent drag handler
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleMaximize();
+              }}
             >
               {windowState.isMaximized ? (
                 <VscChromeRestore className="size-3" />
@@ -352,7 +424,13 @@ export function Window({
             size="sm"
             variant="ghost"
             className="h-6 w-8 p-0 rounded-none hover:bg-red-500! hover:text-white transition-colors delay-0 duration-75"
-            onClick={onClose}
+            onMouseDown={(e) => {
+              e.stopPropagation(); // Prevent drag handler
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
           >
             <VscChromeClose className="size-3" />
           </Button>

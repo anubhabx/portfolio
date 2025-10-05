@@ -21,6 +21,7 @@ export type ContactWindowProps = {
   windowId?: string;
   zIndex?: number;
   isFocused?: boolean;
+  isMinimized?: boolean;
 };
 
 export function ContactWindow({
@@ -30,7 +31,8 @@ export function ContactWindow({
   onFocus,
   windowId,
   zIndex,
-  isFocused
+  isFocused,
+  isMinimized
 }: ContactWindowProps) {
   const [formData, setFormData] = React.useState({
     name: "",
@@ -78,6 +80,7 @@ export function ContactWindow({
       windowId={windowId}
       zIndex={zIndex}
       isFocused={isFocused}
+      isMinimized={isMinimized}
       className="min-w-[600px] min-h-[500px]"
     >
       <div className="p-6 space-y-6 overflow-auto h-full">

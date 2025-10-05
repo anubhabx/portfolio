@@ -30,6 +30,7 @@ export type FileExplorerProps = {
   windowId?: string;
   zIndex?: number;
   isFocused?: boolean;
+  isMinimized?: boolean;
   initialPath?: string;
 };
 
@@ -62,6 +63,7 @@ export function FileExplorer({
   windowId,
   zIndex,
   isFocused,
+  isMinimized,
   initialPath = "This PC"
 }: FileExplorerProps) {
   const [currentPath, setCurrentPath] = React.useState(initialPath);
@@ -170,6 +172,7 @@ export function FileExplorer({
       windowId={windowId}
       zIndex={zIndex}
       isFocused={isFocused}
+      isMinimized={isMinimized}
       className="min-w-[800px] min-h-[500px]"
     >
       <div className="flex flex-col h-full">

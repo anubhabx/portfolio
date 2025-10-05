@@ -34,9 +34,25 @@ export function TaskbarProvider({ children }: { children: React.ReactNode }) {
     const saved = localStorage.getItem("taskbar-pinned");
     if (saved) {
       try {
-        setPinnedApps(JSON.parse(saved));
+        const loaded = JSON.parse(saved) as TaskbarApp[];
+        // Migrate: Ensure terminal has windowType (fix for users with old data)
+        const migrated = loaded.map(app => {
+          if (app.id === "terminal" && !app.windowType) {
+            return { ...app, windowType: "terminal" as const };
+          }
+          return app;
+        });
+        setPinnedApps(migrated);
+        // Save migrated data back
+        if (JSON.stringify(loaded) !== JSON.stringify(migrated)) {
+          localStorage.setItem("taskbar-pinned", JSON.stringify(migrated));
+        }
       } catch (error) {
         console.error("Failed to parse pinned apps:", error);
+        // Fall back to defaults on error
+        const defaultApps = getDefaultPinnedApps();
+        setPinnedApps(defaultApps);
+        localStorage.setItem("taskbar-pinned", JSON.stringify(defaultApps));
       }
     } else {
       // Set default pinned apps
@@ -149,6 +165,7 @@ function getDefaultPinnedApps(): TaskbarApp[] {
       id: "terminal",
       name: "Windows Terminal",
       type: "app",
+      windowType: "terminal",
       metadata: {
         dateModified: new Date(2024, 0, 1)
       }

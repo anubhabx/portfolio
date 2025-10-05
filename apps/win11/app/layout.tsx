@@ -36,7 +36,7 @@ export default function RootLayout({
               <TaskbarProvider>
                 <WindowManagerProvider>
                   <Wallpaper />
-                  <div className="min-h-svh bg-gradient-to-br from-slate-900 via-slate-800 to-neutral-900 text-foreground/90">
+                  <div className="min-h-svh text-foreground/90">
                     <Desktop />
                   </div>
                   <Taskbar />

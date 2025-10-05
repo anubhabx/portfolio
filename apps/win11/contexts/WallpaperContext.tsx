@@ -14,18 +14,24 @@ const WallpaperContext = React.createContext<WallpaperContextType | undefined>(
 );
 
 export function WallpaperProvider({ children }: { children: React.ReactNode }) {
-  const [variant, setVariantState] = React.useState<WallpaperVariant>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("wallpaper-variant");
-      return (saved as WallpaperVariant) || "default";
+  const [variant, setVariantState] = React.useState<WallpaperVariant>("default");
+  const [mounted, setMounted] = React.useState(false);
+
+  // Load saved variant after mount to avoid hydration mismatch
+  React.useEffect(() => {
+    setMounted(true);
+    const saved = localStorage.getItem("wallpaper-variant");
+    if (saved) {
+      setVariantState(saved as WallpaperVariant);
     }
-    return "default";
-  });
+  }, []);
 
   const setVariant = React.useCallback((newVariant: WallpaperVariant) => {
     setVariantState(newVariant);
-    localStorage.setItem("wallpaper-variant", newVariant);
-  }, []);
+    if (mounted) {
+      localStorage.setItem("wallpaper-variant", newVariant);
+    }
+  }, [mounted]);
 
   return (
     <WallpaperContext.Provider value={{ variant, setVariant }}>

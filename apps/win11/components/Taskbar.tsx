@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { motion } from "framer-motion";
 import { cn } from "@workspace/ui/lib/utils";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -24,7 +23,7 @@ import { useWindowManager } from "@/components/WindowManager";
 import { useTaskbar } from "@/contexts/TaskbarContext";
 import { getAppIcon, getAppMetadata, launchApp } from "@/lib/app-registry";
 import StartMenu from "@/components/StartMenu";
-import type { TaskbarApp } from "@/types";
+import type { TaskbarApp, WindowType } from "@/types";
 
 export interface TaskbarProps {
   alignment?: "center" | "left";
@@ -62,10 +61,24 @@ export function Taskbar({ alignment = "center" }: TaskbarProps) {
   };
 
   // Check if an app has open windows (including minimized)
-  const getAppWindows = (appId: string) => {
-    const metadata = getAppMetadata(appId);
-    if (!metadata?.windowType) return [];
-    return windows.filter((w) => w.type === metadata.windowType);
+  const getAppWindows = (appId: string, appWindowType?: WindowType) => {
+    // First try to use the app's windowType directly
+    // Fall back to getting from registry if not provided
+    const windowType = appWindowType || getAppMetadata(appId)?.windowType;
+    if (!windowType) {
+      console.log(`[getAppWindows] ${appId}: NO windowType`);
+      return [];
+    }
+    
+    const filtered = windows.filter((w) => w.type === windowType);
+    console.log(`[getAppWindows] ${appId}:`, {
+      windowType,
+      totalWindows: windows.length,
+      matchingWindows: filtered.length,
+      allWindowTypes: windows.map(w => w.type)
+    });
+    
+    return filtered;
   };
 
   return (
@@ -96,8 +109,19 @@ export function Taskbar({ alignment = "center" }: TaskbarProps) {
 
             {apps.map((app) => {
               const metadata = getAppMetadata(app.id);
-              const appWindows = getAppWindows(app.id);
+              const appWindows = getAppWindows(app.id, app.windowType);
               const hasOpenWindows = appWindows.length > 0;
+              const hasVisibleWindows = appWindows.some(w => !w.isMinimized);
+
+              // Temporary debug
+              console.log(`App: ${app.name}`, {
+                id: app.id,
+                appWindowType: app.windowType,
+                metadataWindowType: metadata?.windowType,
+                windowsCount: appWindows.length,
+                hasOpenWindows,
+                windows: appWindows
+              });
 
               return (
                 <TaskbarIcon
@@ -106,6 +130,7 @@ export function Taskbar({ alignment = "center" }: TaskbarProps) {
                   icon={getAppIcon(app.id, "size-5")}
                   active={activeId === app.id}
                   hasOpenWindows={hasOpenWindows}
+                  hasVisibleWindows={hasVisibleWindows}
                   isPinned={isAppPinned(app.id)}
                   onLaunch={() => handleLaunch(app)}
                   onUnpin={() => handleUnpin(app.id)}
@@ -164,13 +189,14 @@ type TaskbarIconProps = {
   icon?: React.ReactNode;
   active?: boolean;
   hasOpenWindows?: boolean;
+  hasVisibleWindows?: boolean;
   isPinned: boolean;
   onLaunch: () => void;
   onUnpin: () => void;
 };
 
 const TaskbarIcon = React.forwardRef<HTMLButtonElement, TaskbarIconProps>(
-  ({ app, icon, active, hasOpenWindows, isPinned, onLaunch, onUnpin }, ref) => {
+  ({ app, icon, active, hasOpenWindows, hasVisibleWindows, isPinned, onLaunch, onUnpin }, ref) => {
     return (
       <ContextMenu>
         <ContextMenuTrigger asChild>
@@ -179,20 +205,18 @@ const TaskbarIcon = React.forwardRef<HTMLButtonElement, TaskbarIconProps>(
               <TaskbarButton
                 ref={ref}
                 onClick={onLaunch}
-                active={active || hasOpenWindows}
+                active={active || hasVisibleWindows}
                 aria-label={app.name}
               >
                 <div className="flex items-center justify-center size-8 w-full h-full">
                   {icon}
                 </div>
-                <motion.span
-                  layoutId={`indicator-${app.id}`}
-                  className={cn(
-                    "absolute bottom-0 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-cyan-400/90",
-                    active || hasOpenWindows ? "opacity-100" : "opacity-0"
-                  )}
-                  aria-hidden
-                />
+                {hasOpenWindows && (
+                  <span
+                    className="absolute bottom-0 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-cyan-400/90"
+                    aria-hidden
+                  />
+                )}
               </TaskbarButton>
             </TooltipTrigger>
             <TooltipContent side="top" className="text-xs">

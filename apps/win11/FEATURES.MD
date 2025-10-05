@@ -2,7 +2,7 @@
 
 > **Last Updated:** October 5, 2025  
 > **Project Goal:** Personal portfolio with Windows 11 UI aesthetic
-> **Overall Completion:** ~90%
+> **Overall Completion:** ~95%
 
 ---
 
@@ -63,7 +63,8 @@
 
 - [x] Real-time clock (updates every second)
 - [x] Smooth window animations with Framer Motion
-- [ ] Transition animations between window states
+- [x] Enhanced window animations (hover effects, smooth transitions)
+- [x] Transition animations between window states
 
 ---
 
@@ -79,9 +80,13 @@
 
 ### Nice to Have
 
+- [x] Dark/Light mode toggle
+- [x] Terminal command history (up/down arrows)
+- [x] Terminal autocomplete (Tab key)
+- [x] Enhanced window animations
+- [x] Improved wallpaper picker
 - [ ] Project detail view/modal
 - [ ] Skills visualization (charts/graphs)
-- [ ] Dark/Light mode toggle
 - [ ] Testimonials section (optional)
 - [ ] Blog posts window (optional)
 
@@ -91,7 +96,8 @@
 
 ### Desktop Experience
 
-- [ ] Desktop wallpaper picker
+- [x] Desktop wallpaper picker (4 variants with live preview)
+- [x] Desktop wallpaper persistence
 - [ ] Icon auto-arrange
 - [ ] Drag-to-select improvements
 

@@ -71,8 +71,13 @@ export function WindowManagerProvider({
 
   const getWindowZIndex = React.useCallback(
     (windowId: string) => {
-      if (windowId === focusedWindowId) return 50;
-      return 49;
+      // Z-index hierarchy:
+      // 40-48: Unfocused windows
+      // 49: Focused window
+      // 50: Taskbar
+      // 51: Start menu and overlays
+      if (windowId === focusedWindowId) return 49;
+      return 40;
     },
     [focusedWindowId]
   );
@@ -98,7 +103,8 @@ export function WindowManagerProvider({
             onFocus: () => focusWindow(window.id),
             windowId: `${window.type}-${window.id}`,
             zIndex: getWindowZIndex(window.id),
-            isFocused: window.id === focusedWindowId
+            isFocused: window.id === focusedWindowId,
+            isMinimized: window.isMinimized
           };
 
           switch (window.type) {

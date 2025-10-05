@@ -17,12 +17,29 @@ interface CommandOutput {
 
 export function TerminalWindow(props: WindowProps) {
   const [history, setHistory] = React.useState<CommandOutput[]>([]);
+  const [commandHistory, setCommandHistory] = React.useState<string[]>([]);
+  const [historyIndex, setHistoryIndex] = React.useState(-1);
   const [input, setInput] = React.useState("");
   const inputRef = React.useRef<HTMLInputElement>(null);
   const scrollRef = React.useRef<HTMLDivElement>(null);
   
   const { resume } = useResume();
   const { projects } = useGitHubProjects({ username: "anubhabx" });
+
+  // Available commands for autocomplete
+  const availableCommands = [
+    "help",
+    "about",
+    "contact",
+    "socials",
+    "skills",
+    "projects",
+    "experience",
+    "education",
+    "resume",
+    "clear",
+    "cls"
+  ];
 
   // Auto-scroll to bottom when new output is added
   React.useEffect(() => {
@@ -277,15 +294,63 @@ export function TerminalWindow(props: WindowProps) {
     e.preventDefault();
     if (input.trim()) {
       executeCommand(input);
+      // Add to command history
+      setCommandHistory((prev) => [...prev, input]);
+      setHistoryIndex(-1);
       setInput("");
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    // Future: Add command history navigation with up/down arrows
-    if (e.key === "Tab") {
+    // Command history navigation with up/down arrows
+    if (e.key === "ArrowUp") {
       e.preventDefault();
-      // Future: Add autocomplete
+      if (commandHistory.length > 0) {
+        const newIndex = historyIndex === -1 
+          ? commandHistory.length - 1 
+          : Math.max(0, historyIndex - 1);
+        setHistoryIndex(newIndex);
+        setInput(commandHistory[newIndex] || "");
+      }
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (historyIndex !== -1) {
+        const newIndex = historyIndex + 1;
+        if (newIndex >= commandHistory.length) {
+          setHistoryIndex(-1);
+          setInput("");
+        } else {
+          setHistoryIndex(newIndex);
+          setInput(commandHistory[newIndex] || "");
+        }
+      }
+    } else if (e.key === "Tab") {
+      e.preventDefault();
+      // Autocomplete command
+      if (input.trim()) {
+        const matches = availableCommands.filter(cmd => 
+          cmd.startsWith(input.trim().toLowerCase())
+        );
+        if (matches.length === 1 && matches[0]) {
+          setInput(matches[0]);
+        } else if (matches.length > 1) {
+          // Show available matches
+          const output = (
+            <div className="space-y-1">
+              <div className="text-muted-foreground">Available commands:</div>
+              <div className="pl-4 text-blue-400">{matches.join(", ")}</div>
+            </div>
+          );
+          setHistory((prev) => [
+            ...prev,
+            {
+              command: input,
+              output,
+              timestamp: new Date()
+            }
+          ]);
+        }
+      }
     }
   };
 

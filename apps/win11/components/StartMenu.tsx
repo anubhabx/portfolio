@@ -91,7 +91,7 @@ export function StartMenu({ isOpen, onClose }: StartMenuProps) {
         <motion.div
           data-start-menu
           className={cn(
-            "fixed bottom-14 left-1/2 -translate-x-[50%] z-50",
+            "fixed bottom-14 left-1/2 -translate-x-[50%] z-[51]",
             "w-[640px] h-[640px]",
             "bg-black/30 backdrop-blur-lg",
             "border border-white/10 rounded-lg shadow-2xl",

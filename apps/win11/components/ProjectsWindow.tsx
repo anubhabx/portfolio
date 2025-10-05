@@ -36,6 +36,7 @@ export type ProjectsWindowProps = {
   windowId?: string;
   zIndex?: number;
   isFocused?: boolean;
+  isMinimized?: boolean;
 };
 
 // Replace with your GitHub username
@@ -48,7 +49,8 @@ export function ProjectsWindow({
   onFocus,
   windowId,
   zIndex,
-  isFocused
+  isFocused,
+  isMinimized
 }: ProjectsWindowProps) {
   const { projects, isLoading, error, refetch, lastUpdated } =
     useGitHubProjects({
@@ -153,6 +155,7 @@ export function ProjectsWindow({
       windowId={windowId}
       zIndex={zIndex}
       isFocused={isFocused}
+      isMinimized={isMinimized}
       className="min-w-[900px] min-h-[600px]"
     >
       <div className="flex flex-col h-full">
