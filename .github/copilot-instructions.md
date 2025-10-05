@@ -26,7 +26,8 @@ A personal portfolio website styled as a Windows 11 desktop interface built with
    - Call `openWindow()` to launch apps
    - Window types are registered in `lib/app-registry.tsx` (single source of truth)
    - All window components receive standard props: `isOpen`, `onClose`, `onMinimize`, `onFocus`, `windowId`, `zIndex`, `isFocused`
-   - Available windows: File Explorer, Resume, Projects, Contact
+   - Available windows: File Explorer, Resume, Projects, Contact, Settings, Terminal
+   - **Window Snapping**: Drag windows to screen edges to snap (left/right half, corners for quarters, top edge for maximize)
 
 3. **State Persistence**: Desktop icons, taskbar pins, and window positions auto-save to `localStorage`:
    - `desktop-items` - Desktop icon positions
@@ -91,6 +92,14 @@ A personal portfolio website styled as a Windows 11 desktop interface built with
 - **Pattern**: JSON-based content for better structure, type safety, and maintainability
 - **PDF Parsing**: Legacy `app/api/resume/parse/route.ts` available but JSON is preferred method
 
+### Working with Terminal Window
+- **Component**: `components/TerminalWindow.tsx` - Interactive terminal with portfolio commands
+- **Command Pattern**: Unix-style commands (e.g., `contact`, `skills`, `projects`, not PowerShell-style)
+- **Data Integration**: Hooks into `useResume()` and `useGitHubProjects()` for live data
+- **Available Commands**: `help`, `about`, `contact`, `socials`, `skills`, `projects`, `experience`, `education`, `resume`, `clear`
+- **Styling**: Black terminal background with green/blue text for authentic terminal feel
+- **UX**: Auto-scroll, auto-focus input, real-time data loading states
+
 ## Development Commands
 
 ```bash
@@ -101,10 +110,12 @@ pnpm lint         # Lint all workspaces
 pnpm format       # Format with Prettier
 
 # App-specific (from /apps/win11)
-pnpm dev          # Dev server with Turbopack
+pnpm dev          # Dev server with Turbopack (port 3000)
 pnpm typecheck    # TypeScript check without emitting
 pnpm lint:fix     # Auto-fix linting issues
 ```
+
+**Important**: This project uses **pnpm** (v10.18.0+) and **Node.js 20+**. Do NOT use npm or yarn.
 
 ## Project-Specific Conventions
 
@@ -129,11 +140,12 @@ pnpm lint:fix     # Auto-fix linting issues
 - Custom hooks exposed via `use{Context}()` pattern (e.g., `useDesktop()`, `useTaskbar()`)
 
 ## Feature Status & TODOs
-See `FEATURES.MD` for current completion status (~70%). High-priority missing features:
-- Contact form functionality
-- PDF resume download
-- Project filtering by tech stack
-- Window snap-to-edges
+See `apps/win11/FEATURES.MD` for current completion status (~90%). All critical portfolio features are complete:
+- ✅ Contact form with email/social links
+- ✅ PDF resume download functionality
+- ✅ Project filtering by tech stack
+- ✅ Window snap-to-edges (including top-edge maximize)
+- ✅ Interactive terminal with portfolio commands
 
 ## Common Gotchas
 1. **Window persistence**: Always pass `windowId` prop to Window component for position saving

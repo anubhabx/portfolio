@@ -15,6 +15,8 @@ export type WindowType =
   | "my-projects"
   | "resume"
   | "contact"
+  | "settings"
+  | "terminal"
   | "notepad"
   | "calculator";
 

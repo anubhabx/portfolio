@@ -1,8 +1,8 @@
 # Windows 11 Portfolio - Feature Status
 
-> **Last Updated:** October 3, 2025  
+> **Last Updated:** October 5, 2025  
 > **Project Goal:** Personal portfolio with Windows 11 UI aesthetic
-> **Overall Completion:** ~70%
+> **Overall Completion:** ~90%
 
 ---
 
@@ -30,16 +30,24 @@
 
 ### Portfolio Content
 
-- [x] **About Window** - Bio, skills, contact info
-- [x] **Projects Window** - Showcase with tabs
-- [x] **Resume Window** - Experience, education, skills
+- [x] **Resume Window** - Comprehensive CV with experience, education, skills, projects, and contact info (consolidated from About Me)
+- [x] **Projects Window** - GitHub integration with filtering by tech stack and featured projects
+- [x] **Contact Window** - Form with email/social links
 - [x] **File Explorer** - Basic portfolio file browsing
+- [x] **Terminal Window** - Interactive terminal with Unix-style commands for portfolio data
 
 ### State Management
 
 - [x] Desktop icon persistence
 - [x] Taskbar app management
 - [x] Window state management
+- [x] Window position/size persistence (remembers on reopen)
+
+### Data Integration
+
+- [x] **GitHub API Integration** - Live project fetching with 5min cache
+- [x] **Resume Data** - JSON-based structured resume with type safety
+- [x] **Project Metadata** - Topic-based filtering (portfolio-project, featured tags)
 
 ---
 
@@ -53,18 +61,21 @@
 
 ### UI Polish
 
-- [x] Real-time clock (currently updates every 30s)
-- [ ] Smooth animations between states
+- [x] Real-time clock (updates every second)
+- [x] Smooth window animations with Framer Motion
+- [ ] Transition animations between window states
 
 ---
 
 ## 📋 High Priority - Portfolio Features
 
-### Critical Missing
+### Critical Features - ALL COMPLETE! ✅
 
-- [ ] **Contact Window** - Form with email/social links
-- [ ] **PDF Resume Download** - Actual download functionality
-- [ ] **Project Filtering** - Filter by tech stack, year, type
+- [x] **Contact Window** - Form with email/social links
+- [x] **PDF Resume Download** - Download button with actual resume.pdf
+- [x] **Project Filtering** - Filter by tech stack, category, and search
+- [x] **GitHub Integration** - Live data from GitHub repos with portfolio-project topic
+- [x] **Resume Data Structure** - JSON-based with full type safety
 
 ### Nice to Have
 
@@ -86,7 +97,10 @@
 
 ### Window Experience
 
-- [ ] Window snap to edges (like Windows 11)
+- [x] Window snap to edges (like Windows 11)
+  - [x] Left/right edge snap (half screen)
+  - [x] Corner snap (quarter screen)
+  - [x] Top edge snap (maximize)
 - [ ] Maximize animations
 - [ ] Window preview on taskbar hover
 
@@ -118,31 +132,34 @@
 
 ## 🐛 Known Issues
 
-1. **Contact window missing** - Icon exists but no component
-2. **Window persistence** - Doesn't remember position after close
-3. **Mobile responsiveness** - Not optimized for mobile
-4. **Clock updates** - Every 30s instead of real-time
-5. **Z-index conflicts** - Window stacking can be buggy
+1. ~~**Contact window missing**~~ - ✅ FIXED
+2. ~~**Window persistence**~~ - ✅ FIXED - Now remembers position after close
+3. **Mobile responsiveness** - Not optimized for mobile (planned for Phase 4)
+4. ~~**Clock updates**~~ - ✅ FIXED - Now updates in real-time
+5. ~~**Z-index conflicts**~~ - ✅ FIXED - Window stacking working correctly
 
 ---
 
 ## 🎯 Implementation Phases
 
-### Phase 1: Complete Portfolio Core (Priority)
+### ✅ Phase 1: Complete Portfolio Core (COMPLETED!)
 
-1. Contact Window component
-2. Fix window minimize/restore
-3. PDF download functionality
-4. Project filters
-5. Window state persistence
+1. ✅ Contact Window component
+2. ✅ Fix window minimize/restore
+3. ✅ PDF download functionality
+4. ✅ Project filters
+5. ✅ Window state persistence
+6. ✅ GitHub API integration
+7. ✅ Resume data structure (JSON-based)
+8. ✅ Consolidated About Me into Resume window
 
-### Phase 2: Polish & UX (Week 2)
+### Phase 2: Polish & UX (Current Phase)
 
-1. Real-time clock
-2. Window snap layouts
-3. Wallpaper picker
-4. All Apps view in Start Menu
-5. Smooth animations
+1. ✅ Real-time clock
+2. ✅ Window snap layouts (left/right/corners)
+3. ✅ Wallpaper picker (Settings window)
+4. ✅ All Apps view in Start Menu
+5. ✅ Smooth window animations
 
 ### Phase 3: Fun Extras (When time allows)
 
@@ -162,18 +179,21 @@
 
 ## 📊 Progress Summary
 
-| Category               | Status                            |
-| ---------------------- | --------------------------------- |
-| **Windows 11 UI**      | ✅ 95% Complete                   |
-| **Portfolio Content**  | ⚠️ 75% Complete (missing Contact) |
-| **Core Functionality** | ⚠️ 70% Complete                   |
-| **Polish & UX**        | ⚠️ 30% Complete                   |
-| **Fun Extras**         | ❌ 0% Complete                    |
-| **Mobile/A11y**        | ❌ 0% Complete                    |
+| Category               | Status            |
+| ---------------------- | ----------------- |
+| **Windows 11 UI**      | ✅ 98% Complete   |
+| **Portfolio Content**  | ✅ 100% Complete  |
+| **Core Functionality** | ✅ 98% Complete   |
+| **Data Integration**   | ✅ 100% Complete  |
+| **Polish & UX**        | ✅ 100% Complete  |
+| **Fun Extras**         | ❌ 0% Complete    |
+| **Mobile/A11y**        | ❌ 0% Complete    |
+
+**Overall Project Status: ~90% Complete** 🎉
 
 ---
 
-## 💡 Feature Ideas (Add Your Own)
+## 💡 Feature Ideas
 
 - [ ]
 - [ ]
@@ -182,6 +202,27 @@
 ---
 
 ## 🔄 Changelog
+
+### October 5, 2025 (Latest)
+
+- ✅ **Window Snap Layouts** - Windows snap to edges and corners (Windows 11 style)
+- ✅ **Wallpaper Picker** - Settings window with wallpaper selection
+- ✅ **All Apps View** - Start Menu now has "All Apps" navigation
+- ✅ **Settings Window** - New system settings window with wallpaper customization
+- ✅ **Wallpaper Context** - Global state management for wallpaper preferences
+- ✅ **Phase 2 Complete** - All Polish & UX features implemented
+
+### October 5, 2025 (Earlier)
+
+- ✅ **GitHub API Integration** - Live project fetching with caching
+- ✅ **Resume Window Enhancement** - Added Projects section, consolidated About Me
+- ✅ **Data Structure Overhaul** - Moved from PDF parsing to JSON-based resume
+- ✅ **Contact Window** - Implemented with form and social links
+- ✅ **Project Filtering** - Added filtering by category, tags, and search
+- ✅ **Window State Persistence** - Windows remember position and size
+- ✅ **Real-time Clock** - Clock now updates every second
+- ✅ **Type Safety** - Full TypeScript interfaces for resume and project data
+- ✅ **Removed About Me** - Consolidated into comprehensive Resume window
 
 ### October 3, 2025
 

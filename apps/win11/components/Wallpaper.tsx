@@ -1,18 +1,16 @@
 "use client";
 
 import { cn } from "@workspace/ui/lib/utils";
+import { useWallpaper } from "@/contexts/WallpaperContext";
 
 export type WallpaperProps = {
-  variant?: "default" | "dark" | "light" | "custom";
   className?: string;
   children?: React.ReactNode;
 };
 
-export function Wallpaper({
-  variant = "default",
-  className,
-  children
-}: WallpaperProps) {
+export function Wallpaper({ className, children }: WallpaperProps) {
+  const { variant } = useWallpaper();
+
   const getWallpaperStyles = () => {
     switch (variant) {
       case "dark":

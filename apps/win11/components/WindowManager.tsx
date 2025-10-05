@@ -9,6 +9,8 @@ import FileExplorer from "./FileExplorer";
 import ProjectsWindow from "@/components/ProjectsWindow";
 import ResumeWindow from "@/components/ResumeWindow";
 import ContactWindow from "@/components/ContactWindow";
+import SettingsWindow from "@/components/SettingsWindow";
+import TerminalWindow from "@/components/TerminalWindow";
 
 const WindowManagerContext =
   React.createContext<WindowManagerContextType | null>(null);
@@ -114,6 +116,10 @@ export function WindowManagerProvider({
               return <ResumeWindow key={window.id} {...commonProps} />;
             case "contact":
               return <ContactWindow key={window.id} {...commonProps} />;
+            case "settings":
+              return <SettingsWindow key={window.id} {...commonProps} />;
+            case "terminal":
+              return <TerminalWindow key={window.id} {...commonProps} />;
             default:
               return null;
           }

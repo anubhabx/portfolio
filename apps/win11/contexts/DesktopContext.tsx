@@ -144,6 +144,16 @@ function getDefaultDesktopItems(): DesktopItem[] {
       }
     },
     {
+      id: "settings",
+      name: "Settings",
+      type: "system",
+      position: { x: 0, y: 4 },
+      windowType: "settings",
+      metadata: {
+        dateModified: new Date(2024, 0, 1)
+      }
+    },
+    {
       id: "chrome",
       name: "Google Chrome",
       type: "app",

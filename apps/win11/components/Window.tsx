@@ -37,6 +37,14 @@ interface WindowState {
   position: { x: number; y: number };
   size: { width: number; height: number };
   isMaximized: boolean;
+  snapZone?: "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right" | "maximize" | null;
+}
+
+type SnapZone = "left" | "right" | "top-left" | "top-right" | "bottom-left" | "bottom-right" | "maximize" | null;
+
+interface SnapPreview {
+  zone: SnapZone;
+  bounds: { x: number; y: number; width: number; height: number };
 }
 
 export function Window({
@@ -60,7 +68,10 @@ export function Window({
   windowId
 }: WindowProps) {
   const TASKBAR_HEIGHT = 48;
+  const SNAP_THRESHOLD = 10; // pixels from edge to trigger snap
   const persistenceKey = windowId ? `window-state-${windowId}` : null;
+
+  const [snapPreview, setSnapPreview] = React.useState<SnapPreview | null>(null);
 
   // Load saved state or use defaults
   const [windowState, setWindowState] = React.useState<WindowState>(() => {
@@ -77,12 +88,71 @@ export function Window({
     return {
       position: { x: initialX, y: initialY },
       size: { width: initialWidth, height: initialHeight },
-      isMaximized: false
+      isMaximized: false,
+      snapZone: null
     };
   });
 
   const [isDragging, setIsDragging] = React.useState(false);
   const [dragStart, setDragStart] = React.useState({ x: 0, y: 0 });
+
+  // Calculate snap zone based on mouse position
+  const getSnapZone = React.useCallback((x: number, y: number): SnapZone => {
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight - TASKBAR_HEIGHT;
+    const cornerSize = 200; // Size of corner zones
+
+    // Top edge - check corners first, then maximize
+    if (y < SNAP_THRESHOLD) {
+      if (x < cornerSize) return "top-left";
+      if (x > screenWidth - cornerSize) return "top-right";
+      // Top edge (not corners) will trigger maximize
+      return "maximize" as SnapZone;
+    }
+
+    // Left edge
+    if (x < SNAP_THRESHOLD) {
+      if (y < cornerSize) return "top-left";
+      if (y > screenHeight - cornerSize) return "bottom-left";
+      return "left";
+    }
+
+    // Right edge
+    if (x > screenWidth - SNAP_THRESHOLD) {
+      if (y < cornerSize) return "top-right";
+      if (y > screenHeight - cornerSize) return "bottom-right";
+      return "right";
+    }
+
+    return null;
+  }, [SNAP_THRESHOLD, TASKBAR_HEIGHT]);
+
+  // Get snap zone bounds
+  const getSnapBounds = React.useCallback((zone: SnapZone) => {
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight - TASKBAR_HEIGHT;
+    const halfWidth = screenWidth / 2;
+    const halfHeight = screenHeight / 2;
+
+    switch (zone) {
+      case "maximize":
+        return { x: 0, y: 0, width: screenWidth, height: screenHeight };
+      case "left":
+        return { x: 0, y: 0, width: halfWidth, height: screenHeight };
+      case "right":
+        return { x: halfWidth, y: 0, width: halfWidth, height: screenHeight };
+      case "top-left":
+        return { x: 0, y: 0, width: halfWidth, height: halfHeight };
+      case "top-right":
+        return { x: halfWidth, y: 0, width: halfWidth, height: halfHeight };
+      case "bottom-left":
+        return { x: 0, y: halfHeight, width: halfWidth, height: halfHeight };
+      case "bottom-right":
+        return { x: halfWidth, y: halfHeight, width: halfWidth, height: halfHeight };
+      default:
+        return null;
+    }
+  }, [TASKBAR_HEIGHT]);
 
   // Save state to localStorage whenever it changes
   React.useEffect(() => {
@@ -112,6 +182,7 @@ export function Window({
   const handleMouseMove = React.useCallback(
     (e: MouseEvent) => {
       if (isDragging && !windowState.isMaximized) {
+        // Update window position
         setWindowState((prev) => ({
           ...prev,
           position: {
@@ -119,14 +190,47 @@ export function Window({
             y: Math.max(0, e.clientY - dragStart.y)
           }
         }));
+
+        // Check for snap zones
+        const zone = getSnapZone(e.clientX, e.clientY);
+        if (zone) {
+          const bounds = getSnapBounds(zone);
+          if (bounds) {
+            setSnapPreview({ zone, bounds });
+          }
+        } else {
+          setSnapPreview(null);
+        }
       }
     },
-    [isDragging, dragStart, windowState.isMaximized]
+    [isDragging, dragStart, windowState.isMaximized, getSnapZone, getSnapBounds]
   );
 
   const handleMouseUp = React.useCallback(() => {
-    setIsDragging(false);
-  }, []);
+    if (isDragging) {
+      // Apply snap if preview is active
+      if (snapPreview) {
+        // Handle maximize zone specially
+        if (snapPreview.zone === "maximize") {
+          setWindowState((prev) => ({
+            ...prev,
+            isMaximized: true,
+            snapZone: null
+          }));
+        } else {
+          setWindowState((prev) => ({
+            ...prev,
+            position: { x: snapPreview.bounds.x, y: snapPreview.bounds.y },
+            size: { width: snapPreview.bounds.width, height: snapPreview.bounds.height },
+            isMaximized: false,
+            snapZone: snapPreview.zone
+          }));
+        }
+        setSnapPreview(null);
+      }
+      setIsDragging(false);
+    }
+  }, [isDragging, snapPreview]);
 
   React.useEffect(() => {
     if (isDragging) {
@@ -158,31 +262,49 @@ export function Window({
   if (!isOpen) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      onClick={handleWindowClick}
-      className={cn(
-        "fixed flex flex-col",
-        "bg-background/40 backdrop-blur-xl",
-        "border rounded-lg shadow-2xl",
-        "overflow-hidden",
-        "user-select-none transition-all",
-        windowState.isMaximized && "!top-0 !left-0 rounded-none",
-        isFocused ? "border-blue-500/10" : "border-border/50",
-        className
+    <>
+      {/* Snap Preview Overlay */}
+      {snapPreview && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="fixed z-[9999] pointer-events-none"
+          style={{
+            left: snapPreview.bounds.x,
+            top: snapPreview.bounds.y,
+            width: snapPreview.bounds.width,
+            height: snapPreview.bounds.height,
+            border: "3px solid rgb(59, 130, 246)",
+            backgroundColor: "rgba(59, 130, 246, 0.1)"
+          }}
+        />
       )}
-      style={{
-        zIndex,
-        left: windowState.isMaximized ? 0 : windowState.position.x,
-        top: windowState.isMaximized ? 0 : windowState.position.y,
-        width: windowState.isMaximized ? "100vw" : windowState.size.width,
-        height: windowState.isMaximized
-          ? `calc(100vh - ${TASKBAR_HEIGHT}px)`
-          : windowState.size.height
-      }}
-    >
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        onClick={handleWindowClick}
+        className={cn(
+          "fixed flex flex-col",
+          "bg-background/40 backdrop-blur-xl",
+          "border rounded-lg shadow-2xl",
+          "overflow-hidden",
+          "user-select-none transition-all",
+          windowState.isMaximized && "!top-0 !left-0 rounded-none",
+          isFocused ? "border-blue-500/10" : "border-border/50",
+          className
+        )}
+        style={{
+          zIndex,
+          left: windowState.isMaximized ? 0 : windowState.position.x,
+          top: windowState.isMaximized ? 0 : windowState.position.y,
+          width: windowState.isMaximized ? "100vw" : windowState.size.width,
+          height: windowState.isMaximized
+            ? `calc(100vh - ${TASKBAR_HEIGHT}px)`
+            : windowState.size.height
+        }}
+      >
       {/* Title Bar */}
       <div
         className={cn(
@@ -240,6 +362,7 @@ export function Window({
       {/* Window Content */}
       <div className="flex-1 overflow-hidden">{children}</div>
     </motion.div>
+    </>
   );
 }
 

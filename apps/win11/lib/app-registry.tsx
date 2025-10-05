@@ -9,6 +9,7 @@ import {
   FolderIcon,
   MailIcon
 } from "@/components/Icons";
+import { Settings } from "lucide-react";
 import type { WindowType } from "@/types";
 
 /**
@@ -63,6 +64,13 @@ export const APP_REGISTRY: Record<string, AppMetadata> = {
     windowType: "contact",
     description: "Get in touch with me"
   },
+  settings: {
+    id: "settings",
+    name: "Settings",
+    icon: <Settings className="size-4" />,
+    windowType: "settings",
+    description: "Customize your desktop appearance"
+  },
   chrome: {
     id: "chrome",
     name: "Google Chrome",
@@ -72,9 +80,10 @@ export const APP_REGISTRY: Record<string, AppMetadata> = {
   },
   terminal: {
     id: "terminal",
-    name: "Windows Terminal",
+    name: "Terminal",
     icon: <TerminalIcon />,
-    description: "Command line interface"
+    windowType: "terminal",
+    description: "Portfolio command line interface"
   },
   documents: {
     id: "documents",

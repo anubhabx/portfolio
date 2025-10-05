@@ -24,6 +24,7 @@ export type StartMenuProps = {
 
 export function StartMenu({ isOpen, onClose }: StartMenuProps) {
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [showAllApps, setShowAllApps] = React.useState(false);
   const { openWindow } = useWindowManager();
 
   // Convert APP_REGISTRY to array format
@@ -138,6 +139,41 @@ export function StartMenu({ isOpen, onClose }: StartMenuProps) {
                   )}
                 </div>
               </div>
+            ) : showAllApps ? (
+              /* All Apps View */
+              <div className="h-full">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-medium text-white/70">
+                    All apps
+                  </h3>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-white/50 hover:text-white h-auto p-1 text-xs"
+                    onClick={() => setShowAllApps(false)}
+                  >
+                    Back
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 gap-1">
+                  {allApps.map((app) => (
+                    <motion.button
+                      key={app.id}
+                      className={cn(
+                        "flex items-center gap-3 p-3 rounded-lg",
+                        "hover:bg-white/10 transition-colors text-left w-full"
+                      )}
+                      onClick={() => handleAppClick(app)}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <div className="text-white/90">
+                        {getAppIcon(app.id, "size-6")}
+                      </div>
+                      <span className="text-sm text-white/90">{app.name}</span>
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
             ) : (
               /* Default View */
               <div className="space-y-6 h-full">
@@ -151,6 +187,7 @@ export function StartMenu({ isOpen, onClose }: StartMenuProps) {
                       variant="ghost"
                       size="sm"
                       className="text-white/50 hover:text-white h-auto p-1 text-xs"
+                      onClick={() => setShowAllApps(true)}
                     >
                       All apps
                     </Button>
