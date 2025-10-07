@@ -17,6 +17,7 @@ export type WindowType =
   | "contact"
   | "settings"
   | "terminal"
+  | "browser"
   | "notepad"
   | "calculator";
 

@@ -1,10 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { Settings as SettingsIcon, Image as ImageIcon } from "lucide-react";
+import { Image as ImageIcon } from "lucide-react";
 import Window, { WindowProps } from "@/components/Window";
 import { useWallpaper, WallpaperVariant } from "@/contexts/WallpaperContext";
 import { cn } from "@workspace/ui/lib/utils";
+import { SettingsIcon } from "./Icons";
 
 export function SettingsWindow({
   isOpen,
@@ -69,53 +70,53 @@ export function SettingsWindow({
     >
       <div className="h-full overflow-auto p-6">
         <div className="space-y-6">
-              <div>
-                <h2 className="text-2xl font-semibold mb-2">Background</h2>
-                <p className="text-sm text-muted-foreground">
-                  Choose a wallpaper for your desktop
-                </p>
-              </div>
+          <div>
+            <h2 className="text-2xl font-semibold mb-2">Background</h2>
+            <p className="text-sm text-muted-foreground">
+              Choose a wallpaper for your desktop
+            </p>
+          </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                {wallpapers.map((wp) => (
-                  <button
-                    key={wp.id}
-                    onClick={() => setVariant(wp.id)}
-                    className={cn(
-                      "group relative rounded-lg overflow-hidden border-2 transition-all",
-                      variant === wp.id
-                        ? "border-blue-500 ring-2 ring-blue-500/50"
-                        : "border-border/30 hover:border-blue-500/50"
-                    )}
-                  >
-                    {/* Preview */}
-                    <div
-                      className={cn(
-                        "aspect-video bg-gradient-to-br",
-                        wp.preview,
-                        "relative"
-                      )}
-                    >
-                      {variant === wp.id && (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-medium">
-                            Active
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    {/* Info */}
-                    <div className="p-3 bg-background/50">
-                      <div className="font-medium text-sm">{wp.name}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {wp.description}
+          <div className="grid grid-cols-2 gap-4">
+            {wallpapers.map((wp) => (
+              <button
+                key={wp.id}
+                onClick={() => setVariant(wp.id)}
+                className={cn(
+                  "group relative rounded-lg overflow-hidden border-2 transition-all",
+                  variant === wp.id
+                    ? "border-blue-500 ring-2 ring-blue-500/50"
+                    : "border-border/30 hover:border-blue-500/50"
+                )}
+              >
+                {/* Preview */}
+                <div
+                  className={cn(
+                    "aspect-video bg-gradient-to-br",
+                    wp.preview,
+                    "relative"
+                  )}
+                >
+                  {variant === wp.id && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+                        Active
                       </div>
                     </div>
-                  </button>
-                ))}
-              </div>
-            </div>
+                  )}
+                </div>
+                {/* Info */}
+                <div className="p-3 bg-background/50">
+                  <div className="font-medium text-sm">{wp.name}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {wp.description}
+                  </div>
+                </div>
+              </button>
+            ))}
           </div>
+        </div>
+      </div>
     </Window>
   );
 }

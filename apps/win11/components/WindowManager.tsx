@@ -11,6 +11,7 @@ import ResumeWindow from "@/components/ResumeWindow";
 import ContactWindow from "@/components/ContactWindow";
 import SettingsWindow from "@/components/SettingsWindow";
 import TerminalWindow from "@/components/TerminalWindow";
+import BrowserWindow from "@/components/BrowserWindow";
 
 const WindowManagerContext =
   React.createContext<WindowManagerContextType | null>(null);
@@ -126,6 +127,8 @@ export function WindowManagerProvider({
               return <SettingsWindow key={window.id} {...commonProps} />;
             case "terminal":
               return <TerminalWindow key={window.id} {...commonProps} />;
+            case "browser":
+              return <BrowserWindow key={window.id} {...commonProps} />;
             default:
               return null;
           }

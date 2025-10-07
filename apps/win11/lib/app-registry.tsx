@@ -7,7 +7,8 @@ import {
   ProgramFolderIcon,
   PDFIcon,
   FolderIcon,
-  MailIcon
+  MailIcon,
+  SettingsIcon
 } from "@/components/Icons";
 import { Settings } from "lucide-react";
 import type { WindowType } from "@/types";
@@ -55,7 +56,8 @@ export const APP_REGISTRY: Record<string, AppMetadata> = {
     name: "Resume / CV",
     icon: <PDFIcon />,
     windowType: "resume",
-    description: "View my professional resume, experience, education, and projects"
+    description:
+      "View my professional resume, experience, education, and projects"
   },
   contact: {
     id: "contact",
@@ -67,7 +69,7 @@ export const APP_REGISTRY: Record<string, AppMetadata> = {
   settings: {
     id: "settings",
     name: "Settings",
-    icon: <Settings className="size-4" />,
+    icon: <SettingsIcon className="size-4" />,
     windowType: "settings",
     description: "Customize your desktop appearance"
   },
@@ -75,7 +77,7 @@ export const APP_REGISTRY: Record<string, AppMetadata> = {
     id: "chrome",
     name: "Google Chrome",
     icon: <ChromeIcon />,
-    href: "https://google.com",
+    windowType: "browser",
     description: "Web browser"
   },
   terminal: {
